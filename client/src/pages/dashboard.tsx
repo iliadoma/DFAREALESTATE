@@ -13,17 +13,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Trophy, Star, Building2, Store, LineChart, LogOut, Wallet, Menu } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
+import LanguageSwitcher from "@/components/language-switcher";
 import InvestmentCard from "@/components/investment-card";
 import InvestmentFilter from "@/components/investment-filter";
 import PortfolioChart from "@/components/portfolio-chart";
-import { Trophy, Star, Building2, Store, LineChart, LogOut, Wallet } from "lucide-react";
-import { useI18n } from "@/lib/i18n/context";
-import LanguageSwitcher from "@/components/language-switcher";
 
 type FilterState = {
   type?: "real_estate" | "business";
@@ -41,11 +42,9 @@ export default function Dashboard() {
     type: "real_estate" // Default to real estate view
   });
 
-  // XP needed for next level (simple calculation)
   const xpForNextLevel = (user?.level || 1) * 1000;
   const progressToNextLevel = ((user?.experience || 0) / xpForNextLevel) * 100;
 
-  // Calculate portfolio statistics
   const stats = useMemo(() => {
     const realEstateInvestments = portfolio?.filter(t =>
       investments?.find(i => i.id === t.investmentId)?.type === 'real_estate'
@@ -73,7 +72,6 @@ export default function Dashboard() {
     };
   }, [portfolio, investments]);
 
-  // Redirect to landing if not authenticated
   useEffect(() => {
     if (!user) {
       setLocation("/");
@@ -93,38 +91,69 @@ export default function Dashboard() {
     return true;
   });
 
-  // If no user, don't render dashboard
   if (!user) return null;
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">TokenizedAssets</h1>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Level {user?.level}</span>
-                <div className="w-32">
-                  <Progress value={progressToNextLevel} className="h-2" />
-                </div>
-              </div>
-              <Star className="h-6 w-6 text-yellow-500" />
+      <header className="border-b sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">TokenizedAssets</h1>
+
+            <div className="flex md:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>{t("common.welcome")}, {user?.username}</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-4 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col flex-1">
+                        <span className="text-sm font-medium">Level {user?.level}</span>
+                        <Progress value={progressToNextLevel} className="h-2" />
+                      </div>
+                      <Star className="h-6 w-6 text-yellow-500 flex-shrink-0" />
+                    </div>
+                    <LanguageSwitcher />
+                    <Button variant="outline" className="w-full" onClick={handleLogout}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      {t("common.logout")}
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
-            <span className="text-sm text-muted-foreground">
-              {t("common.welcome")}, {user?.username}
-            </span>
-            <LanguageSwitcher />
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              {t("common.logout")}
-            </Button>
+
+            <div className="hidden md:flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">Level {user?.level}</span>
+                  <div className="w-32">
+                    <Progress value={progressToNextLevel} className="h-2" />
+                  </div>
+                </div>
+                <Star className="h-6 w-6 text-yellow-500" />
+              </div>
+              <span className="text-sm text-muted-foreground">
+                {t("common.welcome")}, {user?.username}
+              </span>
+              <LanguageSwitcher />
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                {t("common.logout")}
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+      <main className="container mx-auto px-4 py-6 md:py-8">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 md:mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -201,13 +230,13 @@ export default function Dashboard() {
             />
 
             {isLoading ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {[...Array(6)].map((_, i) => (
                   <Skeleton key={i} className="h-[300px]" />
                 ))}
               </div>
             ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {filteredInvestments?.map((investment) => (
                   <InvestmentCard
                     key={investment.id}

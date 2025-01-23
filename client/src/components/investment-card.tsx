@@ -74,20 +74,23 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   };
 
   return (
-    <Card className="relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={handleCardClick}>
+    <Card
+      className="relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
+      onClick={handleCardClick}
+    >
       {!preview && investment.level > 1 && (
         <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-yellow-500/10 rounded-full">
           <Star className="h-4 w-4 text-yellow-500" />
           <span className="text-sm font-medium">{t("investment.level")} {investment.level}</span>
         </div>
       )}
-      <CardHeader>
+      <CardHeader className="pb-4">
         <div className="flex justify-between items-start">
-          <div>
-            <CardTitle>
+          <div className="space-y-1">
+            <CardTitle className="leading-tight">
               {t(`investment.names.${investment.translationKey}.name`)}
             </CardTitle>
-            <CardDescription className="mt-1">
+            <CardDescription>
               {t(investment.type === "real_estate" ? "investment.types.realEstate" : "investment.types.business")}
             </CardDescription>
           </div>
@@ -101,10 +104,14 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       <CardContent>
         <div className="space-y-4">
           <div className="flex items-center text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 mr-1" />
-            {t(`investment.names.${investment.translationKey}.location`)}
+            <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+            <span className="truncate">
+              {t(`investment.names.${investment.translationKey}.location`)}
+            </span>
           </div>
-          <p className="text-sm">{t(`investment.descriptions.${investment.category}`)}</p>
+          <p className="text-sm line-clamp-2">
+            {t(`investment.descriptions.${investment.category}`)}
+          </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium">{t("investment.pricePerToken")}</p>
@@ -149,11 +156,13 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
                 {totalUserTokens > 0 ? t("investment.purchaseMore") : t("investment.investNow")}
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
                 <DialogDescription>
-                  {t("investment.purchaseTokens.description", { name: t(`investment.names.${investment.translationKey}.name`) })}
+                  {t("investment.purchaseTokens.description", {
+                    name: t(`investment.names.${investment.translationKey}.name`),
+                  })}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -175,7 +184,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
                   </p>
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="gap-2 sm:gap-0">
                 <Button variant="outline" onClick={() => setIsOpen(false)}>
                   {t("common.cancel")}
                 </Button>
