@@ -11,8 +11,19 @@ export function registerRoutes(app: Express): Server {
   // Set up authentication routes and middleware
   setupAuth(app);
 
-  // Serve attached assets statically
-  app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets')));
+  // Serve attached assets statically with proper content type handling
+  app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), {
+    setHeaders: (res, filePath) => {
+      // Set proper content type for PNG files
+      if (filePath.endsWith('.png')) {
+        res.setHeader('Content-Type', 'image/png');
+      }
+      // Set proper content type for JPG/JPEG files
+      else if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+        res.setHeader('Content-Type', 'image/jpeg');
+      }
+    }
+  }));
 
   // Investment routes
   app.get("/api/investments", async (_req, res) => {
