@@ -4,6 +4,7 @@ import { useUser } from "@/hooks/use-user";
 import { useInvestments } from "@/hooks/use-investments";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import {
   Card,
   CardContent,
@@ -14,7 +15,7 @@ import {
 import InvestmentCard from "@/components/investment-card";
 import InvestmentFilter from "@/components/investment-filter";
 import PortfolioChart from "@/components/portfolio-chart";
-import { Building2, LineChart, LogOut, Wallet } from "lucide-react";
+import { Trophy, Star, Building2, LineChart, LogOut, Wallet } from "lucide-react";
 
 type FilterState = {
   type?: "real_estate" | "business";
@@ -27,6 +28,10 @@ export default function Dashboard() {
   const { user, logout } = useUser();
   const { investments, portfolio, isLoading } = useInvestments();
   const [filters, setFilters] = useState<FilterState>({});
+
+  // XP needed for next level (simple calculation)
+  const xpForNextLevel = (user?.level || 1) * 1000;
+  const progressToNextLevel = ((user?.experience || 0) / xpForNextLevel) * 100;
 
   // Redirect to landing if not authenticated
   useEffect(() => {
@@ -61,6 +66,15 @@ export default function Dashboard() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">TokenizedAssets</h1>
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Level {user?.level}</span>
+                <div className="w-32">
+                  <Progress value={progressToNextLevel} className="h-2" />
+                </div>
+              </div>
+              <Star className="h-6 w-6 text-yellow-500" />
+            </div>
             <span className="text-sm text-muted-foreground">
               Welcome, {user?.username}
             </span>
@@ -73,7 +87,7 @@ export default function Dashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
+        <div className="grid gap-6 md:grid-cols-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -98,6 +112,24 @@ export default function Dashboard() {
             <CardContent>
               <div className="text-2xl font-bold">
                 {portfolio?.length ?? 0}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Achievements
+              </CardTitle>
+              <Trophy className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {/* TODO: Add actual achievements count */}
+                3
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Latest: First Investment
               </div>
             </CardContent>
           </Card>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Building2, MapPin, TrendingUp } from "lucide-react";
+import { Building2, MapPin, TrendingUp, Star } from "lucide-react";
 import { useInvestments } from "@/hooks/use-investments";
 import { useUser } from "@/hooks/use-user";
 import { useLocation } from "wouter";
@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import type { Investment, Token } from "@db/schema";
 
 type InvestmentCardProps = {
@@ -40,6 +41,10 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
 
   const totalUserTokens = userTokens.reduce((sum, token) => sum + token.amount, 0);
   const investmentValue = Number(investment.pricePerToken) * totalUserTokens;
+
+  // Calculate progress to next level (simple calculation)
+  const xpForNextLevel = investment.level * 1000;
+  const progressToNextLevel = (investment.experience / xpForNextLevel) * 100;
 
   const handlePurchase = async () => {
     const tokenAmount = parseInt(amount);
@@ -62,7 +67,13 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   };
 
   return (
-    <Card>
+    <Card className="relative overflow-hidden">
+      {!preview && investment.level > 1 && (
+        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-yellow-500/10 rounded-full">
+          <Star className="h-4 w-4 text-yellow-500" />
+          <span className="text-sm font-medium">Level {investment.level}</span>
+        </div>
+      )}
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
@@ -97,6 +108,15 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
               </p>
             </div>
           </div>
+          {!preview && investment.level > 1 && (
+            <div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>Level Progress</span>
+                <span>{progressToNextLevel.toFixed(0)}%</span>
+              </div>
+              <Progress value={progressToNextLevel} className="h-1" />
+            </div>
+          )}
           {!preview && totalUserTokens > 0 && (
             <div className="pt-2 border-t">
               <p className="text-sm font-medium">Your Investment</p>
