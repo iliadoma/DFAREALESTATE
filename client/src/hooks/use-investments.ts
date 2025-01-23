@@ -6,12 +6,14 @@ export function useInvestments() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: investments, isLoading } = useQuery<Investment[]>({
+  const { data: investments, isLoading: investmentsLoading } = useQuery<Investment[]>({
     queryKey: ['/api/investments'],
+    staleTime: 30000, // Consider data fresh for 30 seconds
   });
 
-  const { data: portfolio } = useQuery<Token[]>({
+  const { data: portfolio, isLoading: portfolioLoading } = useQuery<Token[]>({
     queryKey: ['/api/portfolio'],
+    staleTime: 30000,
   });
 
   const purchaseTokens = useMutation({
@@ -30,7 +32,9 @@ export function useInvestments() {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate both investments and portfolio queries
       queryClient.invalidateQueries({ queryKey: ['/api/portfolio'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/investments'] });
       toast({
         title: "Success",
         description: "Successfully purchased tokens"
@@ -48,7 +52,7 @@ export function useInvestments() {
   return {
     investments,
     portfolio,
-    isLoading,
+    isLoading: investmentsLoading || portfolioLoading,
     purchaseTokens: purchaseTokens.mutate
   };
 }

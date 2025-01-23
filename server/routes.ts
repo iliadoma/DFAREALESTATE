@@ -39,29 +39,7 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  app.post("/api/investments", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).send("Unauthorized");
-    }
-
-    try {
-      const result = insertInvestmentSchema.safeParse(req.body);
-      if (!result.success) {
-        return res.status(400).send("Invalid input");
-      }
-
-      const [investment] = await db
-        .insert(investments)
-        .values(result.data)
-        .returning();
-
-      res.json(investment);
-    } catch (error) {
-      res.status(500).send("Error creating investment");
-    }
-  });
-
-  // Token routes
+  // Portfolio route
   app.get("/api/portfolio", async (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).send("Not authenticated");
@@ -77,6 +55,7 @@ export function registerRoutes(app: Express): Server {
 
       res.json(userTokens);
     } catch (error) {
+      console.error("Portfolio fetch error:", error);
       res.status(500).send("Error fetching portfolio");
     }
   });
@@ -114,6 +93,7 @@ export function registerRoutes(app: Express): Server {
 
       res.json(token);
     } catch (error) {
+      console.error("Token purchase error:", error);
       res.status(500).send("Error purchasing tokens");
     }
   });
