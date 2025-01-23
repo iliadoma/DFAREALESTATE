@@ -1,0 +1,79 @@
+"I want to add real examples of investment opportunities into my system, with proper Russian translations and all amounts specified in rubles instead of dollars. Here’s the data to include and how it should be implemented:
+
+1. Commercial Real Estate Investments
+Add the following properties:
+Property 1:
+Name: "Помещение на Некрасова, 12"
+Developer: Брусника
+Location: Екатеринбург
+Size: 230 кв.м
+Estimated Monthly Rental Income: 300,000 ₽
+Expected ROI over 5 years: 15%
+Property 2:
+Name: "Помещение в ЖК Метроном"
+Developer: Брусника
+Location: Москва
+Size: 340 кв.м
+Estimated Monthly Rental Income: 450,000 ₽
+Expected ROI over 5 years: 20%
+Property 3:
+Name: "Помещение в ЖК Милый дом"
+Developer: Baza
+Location: Екатеринбург
+Size: 270 кв.м
+Estimated Monthly Rental Income: 320,000 ₽
+Expected ROI over 5 years: 18%
+Property 4:
+Name: "Помещение в Квартале на Васильевском острове"
+Developer: Брусника
+Location: Санкт-Петербург
+Size: 270 кв.м
+Estimated Monthly Rental Income: 400,000 ₽
+Expected ROI over 5 years: 17%
+2. Business Investments
+Add the following businesses:
+Business 1:
+Name: "Ресторан Self Edge"
+Location: Москва
+Business Type: Ресторан
+Estimated Annual Revenue: 60,000,000 ₽
+Profit-Sharing Percentage for Investors: 10%
+Business 2:
+Name: "Кофейня Папа Карло"
+Location: Екатеринбург, Ельцин Центр
+Business Type: Кофейня
+Estimated Annual Revenue: 15,000,000 ₽
+Profit-Sharing Percentage for Investors: 8%
+Business 3:
+Name: "Спа-салон"
+Location: Санкт-Петербург, Васильевский остров
+Business Type: Спа и велнес
+Estimated Annual Revenue: 25,000,000 ₽
+Profit-Sharing Percentage for Investors: 12%
+3. Implementation Details
+Frontend:
+
+Update the investment classifier to display the new options under their respective categories with proper translations:
+Коммерческая недвижимость: Group the four properties together.
+Бизнесы: Group the three businesses together.
+Display the following for each investment:
+Name, location, size (for real estate), or type (for businesses).
+Key financial metrics (e.g., ROI, rental income, revenue potential) with amounts in рублях.
+A "Подробнее" button to navigate to the detail page.
+Backend:
+
+Add these examples to the database or as seed data for testing:
+Include fields for each property or business (e.g., name, location, size, revenue, developer).
+Ensure all amounts are stored and served in рублях.
+Localization:
+
+Ensure all text is properly translated into Russian, including labels, buttons, and financial metrics.
+Testing:
+
+Ensure that the new investments are displayed correctly in both categories.
+Verify that all amounts are shown in rubles (₽) and financial details load properly on the respective detail pages.
+4. Deliverables
+Updated investment classifier with new examples clearly separated into Коммерческая недвижимость and Бизнесы.
+Fully translated interface into Russian with all financial data displayed in rubles (₽).
+Functional detail pages for each investment with all relevant metrics in the correct format.
+Please implement these changes, ensuring the new investment opportunities are fully integrated into the system with proper localization and currency adjustments."

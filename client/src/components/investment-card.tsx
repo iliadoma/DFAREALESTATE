@@ -34,6 +34,10 @@ type InvestmentCardProps = {
   preview?: boolean;
 };
 
+const formatCurrency = (amount: number, currency: string) => {
+  return currency === 'RUB' ? `${amount.toLocaleString('ru-RU')} ₽` : `$${amount.toFixed(2)}`;
+};
+
 export default function InvestmentCard({ investment, userTokens, preview }: InvestmentCardProps) {
   const [, setLocation] = useLocation();
   const { user } = useUser();
@@ -86,7 +90,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   };
 
   const handleAction = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click when clicking the button
+    e.stopPropagation(); 
     if (preview) {
       setLocation("/auth");
       return;
@@ -137,12 +141,12 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
             </span>
           </div>
           <p className="text-sm line-clamp-2">
-            {t(`investment.descriptions.${investment.category}`)}
+            {t(`investment.descriptions.${investment.translationKey}`)}
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium">{t("investment.pricePerToken")}</p>
-              <p className="text-lg">${Number(investment.pricePerToken).toFixed(2)}</p>
+              <p className="text-lg">{formatCurrency(Number(investment.pricePerToken), investment.currency)}</p>
             </div>
             <div>
               <p className="text-sm font-medium">{t("investment.expectedRoi")}</p>
@@ -163,7 +167,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           {!preview && totalUserTokens > 0 && (
             <div className="pt-2 border-t">
               <p className="text-sm font-medium">{t("investment.yourInvestment")}</p>
-              <p className="text-lg">${investmentValue.toFixed(2)}</p>
+              <p className="text-lg">{formatCurrency(investmentValue, investment.currency)}</p>
               <p className="text-sm text-muted-foreground">
                 {totalUserTokens} {t("investment.tokens")}
               </p>
@@ -203,10 +207,11 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
                   />
                 </div>
                 <div className="text-sm">
-                  <p>{t("investment.purchaseTokens.pricePerToken")}: ${Number(investment.pricePerToken).toFixed(2)}</p>
+                  <p>
+                    {t("investment.purchaseTokens.pricePerToken")}: {formatCurrency(Number(investment.pricePerToken), investment.currency)}
+                  </p>
                   <p className="font-medium mt-2">
-                    {t("investment.purchaseTokens.total")}: $
-                    {(Number(investment.pricePerToken) * (parseInt(amount) || 0)).toFixed(2)}
+                    {t("investment.purchaseTokens.total")}: {formatCurrency((Number(investment.pricePerToken) * (parseInt(amount) || 0)), investment.currency)}
                   </p>
                 </div>
               </div>
