@@ -4,10 +4,15 @@ import { setupAuth } from "./auth";
 import { db } from "@db";
 import { investments, tokens, distributions, insertInvestmentSchema } from "@db/schema";
 import { eq, and } from "drizzle-orm";
+import path from "path";
+import express from "express";
 
 export function registerRoutes(app: Express): Server {
   // Set up authentication routes and middleware
   setupAuth(app);
+
+  // Serve attached assets statically
+  app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets')));
 
   // Investment routes
   app.get("/api/investments", async (_req, res) => {
