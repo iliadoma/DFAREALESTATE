@@ -25,7 +25,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">TokenizedAssets</h1>
+          <h1 className="text-2xl font-bold">metr.digital</h1>
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
             <Button onClick={() => setLocation("/auth")}>{t("common.login")}</Button>
@@ -117,7 +117,7 @@ export default function LandingPage() {
 
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          {t("landing.footer")} © 2024 TokenizedAssets.
+          {t("landing.footer")} © 2024 metr.digital.
         </div>
       </footer>
     </div>
