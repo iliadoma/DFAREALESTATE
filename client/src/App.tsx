@@ -9,6 +9,7 @@ import NotFound from "@/pages/not-found";
 import LandingPage from "@/pages/landing";
 import AuthPage from "@/pages/auth-page";
 import Dashboard from "@/pages/dashboard";
+import InvestmentDetail from "@/pages/investment-detail";
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -38,6 +39,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/investments/:id" component={InvestmentDetail} />
       <Route>
         <Dashboard />
       </Route>

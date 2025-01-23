@@ -44,7 +44,6 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   const totalUserTokens = userTokens.reduce((sum, token) => sum + token.amount, 0);
   const investmentValue = Number(investment.pricePerToken) * totalUserTokens;
 
-  // Calculate progress to next level (simple calculation)
   const xpForNextLevel = investment.level * 1000;
   const progressToNextLevel = (investment.experience / xpForNextLevel) * 100;
 
@@ -68,8 +67,14 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
     setIsOpen(true);
   };
 
+  const handleCardClick = () => {
+    if (!preview && user) {
+      setLocation(`/investments/${investment.id}`);
+    }
+  };
+
   return (
-    <Card className="relative overflow-hidden">
+    <Card className="relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={handleCardClick}>
       {!preview && investment.level > 1 && (
         <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-yellow-500/10 rounded-full">
           <Star className="h-4 w-4 text-yellow-500" />

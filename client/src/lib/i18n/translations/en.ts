@@ -9,6 +9,7 @@ export const en = {
     submit: "Submit",
     cancel: "Cancel",
     loading: "Loading...",
+    back: "Back",
   },
   auth: {
     loginTitle: "Welcome to TokenizedAssets",
@@ -78,29 +79,46 @@ export const en = {
       business: "Business",
     },
     descriptions: {
-      coffee_shop: "Established coffee shop chain with multiple prime locations",
-      yoga_studio: "Modern yoga studio in a trendy neighborhood",
-      restaurant: "Popular restaurant with proven track record",
-      fitness_center: "State-of-the-art fitness center in prime location",
-      retail_store: "High-traffic retail store in shopping district",
-      coworking_space: "Modern coworking space in business district",
-      standalone_building: "Prime commercial building in city center",
-      ground_floor_commercial: "Ground floor retail space in busy area",
-      mixed_use: "Mixed-use development with retail and office space",
-      office_space: "Modern office space in business district",
-      warehouse: "Strategic warehouse location with good connectivity"
+      retail_complex: "Prime retail complex in high-traffic commercial district",
+      coworking_space: "Modern coworking space with state-of-the-art facilities",
+      warehouse_complex: "Strategic warehouse facility with excellent connectivity",
+      office_space: "Premium office space in central business district",
+      yoga_studio: "Luxurious yoga studio chain with multiple locations",
+      coffee_shop: "Premium coffee shop chain with established brand",
+      fitness_center: "High-end fitness center with latest equipment",
+      mixed_use: "Mixed-use development combining retail and office spaces"
     },
     names: {
-      elite_coffee: {
-        name: "Elite Coffee Shop Chain",
+      retail_complex: {
+        name: "Premium Retail Complex",
         location: "Moscow"
       },
-      yoga_center: {
-        name: "Zen Yoga Studio",
+      coworking_space: {
+        name: "Modern Coworking Hub",
         location: "Saint Petersburg"
       },
-      restaurant_chain: {
-        name: "Gourmet Restaurant Group",
+      warehouse_complex: {
+        name: "Strategic Warehouse Facility",
+        location: "Moscow Region"
+      },
+      office_space: {
+        name: "Central Business Tower",
+        location: "Moscow"
+      },
+      yoga_studio: {
+        name: "Zen Yoga Studio Chain",
+        location: "Multiple Cities"
+      },
+      coffee_shop: {
+        name: "Elite Coffee House Network",
+        location: "Moscow"
+      },
+      fitness_center: {
+        name: "Premium Fitness Club",
+        location: "Saint Petersburg"
+      },
+      mixed_use: {
+        name: "City Center Complex",
         location: "Moscow"
       }
     },
@@ -120,6 +138,16 @@ export const en = {
       pricePerToken: "Price per token",
       total: "Total",
       confirm: "Confirm Purchase"
-    }
+    },
+    performance: "Performance History",
+    performanceDescription: "Historical value and returns over time",
+    propertyDetails: "Property Details",
+    propertySize: "Property Size",
+    occupancyRate: "Occupancy Rate",
+    tenantCount: "Number of Tenants",
+    businessMetrics: "Business Metrics",
+    monthlyRevenue: "Monthly Revenue",
+    profitMargin: "Profit Margin",
+    customerCount: "Monthly Customers",
   },
 };

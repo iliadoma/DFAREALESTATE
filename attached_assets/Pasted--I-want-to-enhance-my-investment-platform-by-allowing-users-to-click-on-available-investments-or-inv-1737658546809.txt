@@ -1,0 +1,77 @@
+"I want to enhance my investment platform by allowing users to click on available investments or investments they’ve made and view a detailed information page about the selected business or real estate asset. This page should provide all the necessary details for the user to evaluate the investment or track its success. Here’s what I need:
+
+1. Investment Detail Page
+Dynamic Content:
+
+The page should display detailed information based on the selected investment:
+If the investment is a real estate asset, show:
+Property type (e.g., retail, office, ground floor).
+Location and size (e.g., square meters).
+Rental income and occupancy rate.
+Expected ROI and historical appreciation trends.
+If the investment is a business, show:
+Business type (e.g., restaurant, fitness center).
+Revenue and profit history.
+Key performance indicators (e.g., customer traffic, profit margins).
+Expected ROI and growth projections.
+Financial Opportunities:
+
+Highlight key financial metrics:
+Monthly income or rental returns.
+Total potential ROI over a specific time period.
+Historical performance charts (e.g., income growth, property appreciation).
+Include projected income scenarios based on different market conditions.
+Call-to-Action (CTA):
+
+For available investments, add buttons like:
+"Invest Now" or "Learn More."
+For investments made, add options like:
+"Sell Investment" or "Reinvest Earnings."
+2. Interactive Features
+Portfolio Insights:
+
+For made investments, provide a breakdown of:
+How much has been earned so far.
+Current valuation compared to initial investment.
+Payout history (e.g., rental payments, business profit distributions).
+Visual Elements:
+
+Use charts and graphs to visualize financial performance:
+Line charts for historical income or appreciation.
+Pie charts for category breakdown (e.g., income from real estate vs. businesses).
+Include high-quality images or videos of the property or business to make the page engaging.
+Additional Data:
+
+Show tenant or business details (if applicable), such as:
+For real estate: Key tenants and their lease duration.
+For businesses: Owner/operator information, business plans, and customer reviews.
+3. Filters and Sorting on List Page
+List Interaction:
+Allow users to click on any investment from the available or made list to navigate to the detail page.
+Include filtering options on the list page for easier navigation (e.g., filter by ROI, category, or location).
+4. Technical Implementation
+Frontend:
+
+Create a reusable Investment Detail Page component in React.js or the existing framework.
+Use dynamic routing to load the detail page for the selected investment.
+Backend:
+
+Update the API to fetch detailed data for individual investments, including:
+Financial metrics.
+Historical performance data.
+Visual assets (e.g., photos, videos).
+Optimize database queries to handle investment lookups efficiently.
+Database:
+
+Ensure the database contains all required fields for both real estate and business investments, such as:
+Asset type, location, size, revenue, ROI, and tenant/business details.
+5. User Experience
+Mobile-Friendly Design:
+Ensure the detail page is fully responsive for mobile users.
+Quick Navigation:
+Add a back button or breadcrumbs to allow users to return to the main list of investments.
+6. Deliverables
+A dynamic Investment Detail Page that loads all relevant information for a selected investment.
+Interactive charts and graphs for financial metrics.
+Updated API and database schema to support detailed data retrieval.
+Mobile-optimized design for seamless user experience.
