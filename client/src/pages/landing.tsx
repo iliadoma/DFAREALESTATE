@@ -21,6 +21,9 @@ export default function LandingPage() {
     queryKey: ['/api/investments'],
   });
 
+  const realEstateInvestments = investments?.filter(inv => inv.type === 'real_estate') ?? [];
+  const businessInvestments = investments?.filter(inv => inv.type === 'business') ?? [];
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
@@ -49,23 +52,44 @@ export default function LandingPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <h3 className="text-2xl font-bold text-center mb-8">
+          <h3 className="text-2xl font-bold text-center mb-12">
             {t("landing.featured.title")}
           </h3>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {investments?.slice(0, 3).map((investment) => (
-              <InvestmentCard
-                key={investment.id}
-                investment={investment}
-                userTokens={[]}
-                preview
-              />
-            ))}
+
+          {/* Real Estate Section */}
+          <div className="mb-16">
+            <h4 className="text-xl font-semibold mb-6 flex items-center gap-2">
+              <span>{t("investment.types.realEstate")}</span>
+              <span className="text-sm text-muted-foreground">({realEstateInvestments.length})</span>
+            </h4>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {realEstateInvestments.map((investment) => (
+                <InvestmentCard
+                  key={investment.id}
+                  investment={investment}
+                  userTokens={[]}
+                  preview
+                />
+              ))}
+            </div>
           </div>
-          <div className="text-center mt-8">
-            <Button variant="outline" onClick={() => setLocation("/auth")}>
-              {t("landing.featured.viewAll")}
-            </Button>
+
+          {/* Business Section */}
+          <div className="mb-8">
+            <h4 className="text-xl font-semibold mb-6 flex items-center gap-2">
+              <span>{t("investment.types.business")}</span>
+              <span className="text-sm text-muted-foreground">({businessInvestments.length})</span>
+            </h4>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {businessInvestments.map((investment) => (
+                <InvestmentCard
+                  key={investment.id}
+                  investment={investment}
+                  userTokens={[]}
+                  preview
+                />
+              ))}
+            </div>
           </div>
         </section>
 
