@@ -16,6 +16,9 @@ export const investments = pgTable("investments", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  translationKey: text("translation_key", { 
+    enum: ["elite_coffee", "yoga_center", "restaurant_chain"] 
+  }).notNull(),
   type: text("type", { enum: ["real_estate", "business"] }).notNull(),
   category: text("category", { 
     enum: [

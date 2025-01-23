@@ -48,14 +48,6 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   const xpForNextLevel = investment.level * 1000;
   const progressToNextLevel = (investment.experience / xpForNextLevel) * 100;
 
-  // Get investment ID for translation
-  const investmentId = investment.name.toLowerCase()
-    .replace(/\s+/g, '_')
-    .replace(/[^a-z0-9_]/g, '')
-    .split('_')
-    .slice(0, 2)
-    .join('_');
-
   const handlePurchase = async () => {
     const tokenAmount = parseInt(amount);
     if (isNaN(tokenAmount) || tokenAmount <= 0) return;
@@ -88,7 +80,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
         <div className="flex justify-between items-start">
           <div>
             <CardTitle>
-              {t(`investment.names.${investmentId}.name`)}
+              {t(`investment.names.${investment.translationKey}.name`)}
             </CardTitle>
             <CardDescription className="mt-1">
               {t(investment.type === "real_estate" ? "investment.types.realEstate" : "investment.types.business")}
@@ -105,7 +97,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
         <div className="space-y-4">
           <div className="flex items-center text-sm text-muted-foreground">
             <MapPin className="h-4 w-4 mr-1" />
-            {t(`investment.names.${investmentId}.location`)}
+            {t(`investment.names.${investment.translationKey}.location`)}
           </div>
           <p className="text-sm">{t(`investment.descriptions.${investment.category}`)}</p>
           <div className="grid grid-cols-2 gap-4">
@@ -156,7 +148,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
               <DialogHeader>
                 <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
                 <DialogDescription>
-                  {t("investment.purchaseTokens.description", { name: t(`investment.names.${investmentId}.name`) })}
+                  {t("investment.purchaseTokens.description", { name: t(`investment.names.${investment.translationKey}.name`) })}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
