@@ -100,10 +100,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       setLocation("/auth");
       return;
     }
-
-    if (!preview) {
-      setIsOpen(true);
-    }
+    setIsOpen(true);
   };
 
   const handleCardClick = () => {
@@ -206,7 +203,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
         ) : (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="w-full" size="lg" onClick={handleAction}>
+              <Button className="w-full" size="lg">
                 {totalUserTokens > 0 ? t("investment.purchaseMore") : t("investment.investNow")}
               </Button>
             </DialogTrigger>
