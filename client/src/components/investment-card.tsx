@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { Building2, MapPin, TrendingUp, Star } from "lucide-react";
+import { Building2, Store, MapPin, TrendingUp, Star } from "lucide-react";
 import { useInvestments } from "@/hooks/use-investments";
 import { useUser } from "@/hooks/use-user";
 import { useLocation } from "wouter";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Dialog,
@@ -23,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n/context";
 import type { Investment, Token } from "@db/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -50,9 +47,6 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
 
   const totalUserTokens = userTokens.reduce((sum, token) => sum + token.amount, 0);
   const investmentValue = Number(investment.pricePerToken) * totalUserTokens;
-
-  const xpForNextLevel = investment.level * 1000;
-  const progressToNextLevel = (investment.experience / xpForNextLevel) * 100;
 
   const handlePurchase = async () => {
     const tokenAmount = parseInt(amount);
@@ -90,7 +84,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   };
 
   const handleAction = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     if (preview) {
       setLocation("/auth");
       return;
@@ -106,68 +100,82 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
 
   return (
     <Card
-      className="relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
+      className="group relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer bg-white"
       onClick={handleCardClick}
     >
-      {!preview && investment.level > 1 && (
-        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-yellow-500/10 rounded-full">
-          <Star className="h-4 w-4 text-yellow-500" />
-          <span className="text-sm font-medium">{t("investment.level")} {investment.level}</span>
-        </div>
-      )}
-      <CardHeader className="pb-4">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <CardTitle className="leading-tight">
-              {investment.name}
-            </CardTitle>
-            <CardDescription>
-              {t(investment.type === "real_estate" ? "investment.types.realEstate" : "investment.types.business")}
-            </CardDescription>
-          </div>
-          {investment.type === "real_estate" ? (
-            <Building2 className="h-5 w-5 text-muted-foreground" />
-          ) : (
-            <TrendingUp className="h-5 w-5 text-muted-foreground" />
+      {/* Image Section */}
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={investment.imageUrl}
+          alt={investment.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        <div className="absolute top-4 left-4 flex gap-2">
+          <Badge variant="secondary" className="bg-white/90 text-primary hover:bg-white/95">
+            {t(investment.type === "real_estate" ? "investment.types.realEstate" : "investment.types.business")}
+          </Badge>
+          {Number(investment.expectedRoi) > 15 && (
+            <Badge variant="secondary" className="bg-green-500/90 text-white hover:bg-green-500/95">
+              High ROI
+            </Badge>
           )}
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex items-center text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-            <span className="truncate">
-              {investment.location}
-            </span>
+        {!preview && investment.level > 1 && (
+          <div className="absolute top-4 right-4 flex items-center gap-1 px-2 py-1 bg-yellow-500/90 rounded-full text-white">
+            <Star className="h-4 w-4" />
+            <span className="text-sm font-medium">Level {investment.level}</span>
           </div>
-          <p className="text-sm line-clamp-2">
-            {investment.description}
-          </p>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium">{t("investment.pricePerToken")}</p>
-              <p className="text-lg">{formatCurrency(Number(investment.pricePerToken), investment.currency)}</p>
+        )}
+      </div>
+
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          {/* Header */}
+          <div className="flex justify-between items-start">
+            <div className="space-y-1">
+              <h3 className="font-semibold text-lg leading-tight">
+                {investment.name}
+              </h3>
+              <div className="flex items-center text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                <span className="truncate">{investment.location}</span>
+              </div>
             </div>
+            {investment.type === "real_estate" ? (
+              <Building2 className="h-6 w-6 text-primary" />
+            ) : (
+              <Store className="h-6 w-6 text-primary" />
+            )}
+          </div>
+
+          {/* Investment Details */}
+          <div className="grid grid-cols-2 gap-6 py-4 border-y">
             <div>
-              <p className="text-sm font-medium">{t("investment.expectedRoi")}</p>
-              <p className="text-lg text-green-600">
+              <p className="text-sm text-muted-foreground">{t("investment.expectedRoi")}</p>
+              <p className="text-xl font-semibold text-green-600">
                 {Number(investment.expectedRoi).toFixed(1)}%
               </p>
             </div>
-          </div>
-          {!preview && investment.level > 1 && (
             <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>{t("investment.levelProgress")}</span>
-                <span>{progressToNextLevel.toFixed(0)}%</span>
-              </div>
-              <Progress value={progressToNextLevel} className="h-1" />
+              <p className="text-sm text-muted-foreground">{t("investment.pricePerToken")}</p>
+              <p className="text-xl font-semibold">
+                {formatCurrency(Number(investment.pricePerToken), investment.currency)}
+              </p>
             </div>
-          )}
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {investment.description}
+          </p>
+
+          {/* User Investment Info */}
           {!preview && totalUserTokens > 0 && (
-            <div className="pt-2 border-t">
+            <div className="pt-4 border-t">
               <p className="text-sm font-medium">{t("investment.yourInvestment")}</p>
-              <p className="text-lg">{formatCurrency(investmentValue, investment.currency)}</p>
+              <p className="text-lg font-semibold">
+                {formatCurrency(investmentValue, investment.currency)}
+              </p>
               <p className="text-sm text-muted-foreground">
                 {totalUserTokens} {t("investment.tokens")}
               </p>
@@ -175,15 +183,16 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           )}
         </div>
       </CardContent>
-      <CardFooter>
+
+      <CardFooter className="px-6 pb-6 pt-0">
         {preview ? (
-          <Button className="w-full" onClick={handleAction}>
+          <Button className="w-full" size="lg" onClick={handleAction}>
             {t("investment.signUpToInvest")}
           </Button>
         ) : (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="w-full" onClick={handleAction}>
+              <Button className="w-full" size="lg" onClick={handleAction}>
                 {totalUserTokens > 0 ? t("investment.purchaseMore") : t("investment.investNow")}
               </Button>
             </DialogTrigger>
