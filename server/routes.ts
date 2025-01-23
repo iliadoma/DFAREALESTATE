@@ -16,7 +16,7 @@ export function registerRoutes(app: Express): Server {
   console.log('Serving assets from:', assetsPath);
 
   app.use('/assets', (req, res, next) => {
-    console.log('Asset request:', req.path);
+    console.log('Asset request:', decodeURIComponent(req.path));
     next();
   }, express.static(assetsPath, {
     setHeaders: (res, filePath) => {
