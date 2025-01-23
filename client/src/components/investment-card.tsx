@@ -76,8 +76,17 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       });
       setIsOpen(false);
       setAmount("");
-    } catch (error) {
+      toast({
+        title: "Success",
+        description: "Successfully purchased tokens"
+      });
+    } catch (error: any) {
       console.error('Purchase failed:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to purchase tokens"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -92,12 +101,9 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       return;
     }
 
-    if (preview) {
-      setLocation("/auth");
-      return;
+    if (!preview) {
+      setIsOpen(true);
     }
-
-    setIsOpen(true);
   };
 
   const handleCardClick = () => {
@@ -193,7 +199,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       </CardContent>
 
       <CardFooter className="px-6 pb-6 pt-0">
-        {preview && !user ? (
+        {!user ? (
           <Button className="w-full" size="lg" onClick={handleAction}>
             {t("investment.signUpToInvest")}
           </Button>
