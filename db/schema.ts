@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, decimal, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, decimal, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { relations } from "drizzle-orm";
 
@@ -7,6 +7,8 @@ export const users = pgTable("users", {
   username: text("username").unique().notNull(),
   password: text("password").notNull(),
   role: text("role", { enum: ["investor", "admin"] }).default("investor").notNull(),
+  level: integer("level").default(1).notNull(),
+  experience: integer("experience").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
@@ -37,8 +39,28 @@ export const investments = pgTable("investments", {
   pricePerToken: decimal("price_per_token", { precision: 10, scale: 2 }).notNull(),
   totalTokens: integer("total_tokens").notNull(),
   availableTokens: integer("available_tokens").notNull(),
+  level: integer("level").default(1).notNull(),
+  experience: integer("experience").default(0).notNull(),
   imageUrl: text("image_url").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  type: text("type", { 
+    enum: [
+      "first_investment",
+      "investment_milestone",
+      "portfolio_value",
+      "consecutive_login",
+      "top_investor"
+    ]
+  }).notNull(),
+  level: integer("level").default(1).notNull(),
+  data: jsonb("data"),
+  unlockedAt: timestamp("unlocked_at").defaultNow().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
@@ -76,6 +98,13 @@ export const tokensRelations = relations(tokens, ({ one }) => ({
   })
 }));
 
+export const achievementsRelations = relations(achievements, ({ one }) => ({
+  user: one(users, {
+    fields: [achievements.userId],
+    references: [users.id]
+  })
+}));
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users);
 export const selectUserSchema = createSelectSchema(users);
@@ -83,6 +112,8 @@ export const insertInvestmentSchema = createInsertSchema(investments);
 export const selectInvestmentSchema = createSelectSchema(investments);
 export const insertTokenSchema = createInsertSchema(tokens);
 export const selectTokenSchema = createSelectSchema(tokens);
+export const insertAchievementSchema = createInsertSchema(achievements);
+export const selectAchievementSchema = createSelectSchema(achievements);
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -92,3 +123,5 @@ export type NewInvestment = typeof investments.$inferInsert;
 export type Token = typeof tokens.$inferSelect;
 export type NewToken = typeof tokens.$inferInsert;
 export type Distribution = typeof distributions.$inferSelect;
+export type Achievement = typeof achievements.$inferSelect;
+export type NewAchievement = typeof achievements.$inferInsert;
