@@ -240,7 +240,7 @@ export default function InvestmentDetail() {
                     </p>
                   </div>
                   <Button className="w-full" onClick={handleInvestClick}>
-                    {!user ? t("investment.signUpToInvest") : 
+                    {!user ? t("investment.signUpToInvest") :
                       totalUserTokens > 0 ? t("investment.purchaseMore") : t("investment.investNow")}
                   </Button>
                 </div>
@@ -302,7 +302,7 @@ export default function InvestmentDetail() {
             <DialogHeader>
               <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
               <DialogDescription>
-                {t("investment.purchaseTokens.description", { name: investment.name })}
+                {t("investment.purchaseTokens.description", { investment: investment.name })}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
