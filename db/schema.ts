@@ -15,11 +15,28 @@ export const investments = pgTable("investments", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   type: text("type", { enum: ["real_estate", "business"] }).notNull(),
-  category: text("category").notNull(),
+  category: text("category", { 
+    enum: [
+      // Real Estate Categories
+      "standalone_building",
+      "ground_floor_commercial",
+      "mixed_use",
+      "office_space",
+      "warehouse",
+      // Business Categories
+      "yoga_studio",
+      "restaurant",
+      "fitness_center",
+      "coffee_shop",
+      "retail_store",
+      "coworking_space"
+    ]
+  }).notNull(),
   location: text("location").notNull(),
   expectedRoi: decimal("expected_roi", { precision: 5, scale: 2 }).notNull(),
-  totalTokens: integer("total_tokens").notNull(),
   pricePerToken: decimal("price_per_token", { precision: 10, scale: 2 }).notNull(),
+  totalTokens: integer("total_tokens").notNull(),
+  availableTokens: integer("available_tokens").notNull(),
   imageUrl: text("image_url").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull()

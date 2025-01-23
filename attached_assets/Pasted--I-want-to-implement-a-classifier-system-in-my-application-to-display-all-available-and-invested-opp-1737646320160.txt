@@ -1,0 +1,92 @@
+"I want to implement a classifier system in my application to display all available and invested opportunities, both on the landing page (for non-logged-in users) and the main dashboard (for logged-in users). Here's what I need:
+
+1. Classifier Design
+Top-Level Categories:
+
+Lifestyle Businesses:
+Yoga Studios
+Restaurants
+Fitness Centers
+Coffee Shops
+Retail Stores
+Co-working Spaces
+Property Types:
+Standalone Buildings
+Ground-floor Commercial Spaces
+Mixed-use Properties
+Office Spaces
+Warehouses
+Filtering Options:
+
+Allow users to filter opportunities based on:
+Business Type: (e.g., Yoga Studios, Restaurants, etc.).
+Property Type: (e.g., Ground-floor spaces, standalone buildings, etc.).
+Investment Status: (e.g., Available, Already Invested).
+Location: Filter by city or region.
+Expected ROI: Filter by potential return on investment.
+Price Range: Allow filtering by investment amount (e.g., <10k, 10k–50k, >50k).
+Dynamic Visualization:
+
+Display filtered results in an intuitive layout (e.g., grid with investment cards).
+Each card should include:
+Name and description of the business or property.
+Key metrics (e.g., ROI, location, available investment slots).
+A "Learn More" button to view detailed information.
+2. Landing Page (For Non-Logged-In Users)
+Showcase Section:
+
+Display the classifier as a read-only preview with example investments.
+Add call-to-action buttons (e.g., "Sign Up to Invest") to encourage user registration.
+Engaging Visuals:
+
+Include visually appealing categories with icons or images for each business and property type.
+Quick Filters:
+
+Allow quick filters for high-level categories, such as "Most Popular," "Highest ROI," or "New Opportunities."
+3. Dashboard Page (For Logged-In Users)
+Personalized Classifier:
+
+Display the classifier with real-time data, showing:
+Active investments.
+Available opportunities.
+Custom recommendations based on user preferences or past investments.
+Advanced Filters:
+
+Include more granular filters, such as:
+Lease Duration (for properties).
+Business Profitability Metrics.
+Property Size or Tenant Type.
+Interactive Map:
+
+Add a map view to allow users to explore investment opportunities geographically.
+4. Technical Implementation
+Frontend:
+
+Build the classifier UI using React.js or another modern framework.
+Ensure a responsive design for both desktop and mobile users.
+Add dropdowns, checkboxes, and sliders for filters.
+Backend:
+
+Use a database (e.g., PostgreSQL) to store investment opportunities with fields like:
+Name, Category, Type, Location, ROI, Status (Available/Invested).
+Create API endpoints for:
+Fetching all opportunities.
+Applying filters dynamically.
+Searching by keywords or tags.
+Performance Optimization:
+
+Use caching (e.g., Redis) for frequently accessed data (e.g., popular filters, top categories).
+Optimize queries to handle large datasets efficiently.
+5. Future Scalability
+Additional Features:
+Allow users to save filters or create custom investment watchlists.
+Enable notifications for new opportunities in preferred categories.
+Localization:
+Support multiple languages (e.g., Russian and English).
+Deliverables
+A functional classifier system on both the landing page and dashboard.
+Filters and categories that can dynamically sort and display results.
+API endpoints for fetching and filtering investment data.
+A visually appealing and responsive interface for both logged-in and non-logged-in users.
+Please generate the necessary frontend, backend, and API code for implementing this feature, along with placeholder data for testing."
+
