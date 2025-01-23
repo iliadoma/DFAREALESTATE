@@ -20,30 +20,25 @@ function Router() {
     );
   }
 
+  // If user is not authenticated, only show public routes
+  if (!user) {
+    return (
+      <Switch>
+        <Route path="/auth" component={AuthPage} />
+        <Route path="/" component={LandingPage} />
+        <Route>
+          <LandingPage />
+        </Route>
+      </Switch>
+    );
+  }
+
+  // If user is authenticated, only show protected routes
   return (
     <Switch>
-      {/* Public routes - only show when not authenticated */}
-      {!user ? (
-        <>
-          <Route path="/" component={LandingPage} />
-          <Route path="/auth" component={AuthPage} />
-        </>
-      ) : null}
-
-      {/* Protected routes - only show when authenticated */}
-      {user ? (
-        <>
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/">
-            <Dashboard />
-          </Route>
-        </>
-      ) : null}
-
-      {/* 404 for authenticated users, redirect to landing for unauthenticated */}
-      <Route>
-        {user ? <NotFound /> : <LandingPage />}
-      </Route>
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/" component={Dashboard} />
+      <Route component={NotFound} />
     </Switch>
   );
 }
