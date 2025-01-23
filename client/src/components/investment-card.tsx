@@ -141,7 +141,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
             </span>
           </div>
           <p className="text-sm line-clamp-2">
-            {t(`investment.descriptions.${investment.translationKey}`)}
+            {investment.description}
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
