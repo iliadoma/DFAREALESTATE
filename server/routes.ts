@@ -37,7 +37,7 @@ export function registerRoutes(app: Express): Server {
       res.status(500).send("Error fetching investment");
     }
   });
-
+  
   app.post("/api/investments", async (req, res) => {
     if (!req.isAuthenticated() || req.user.role !== "admin") {
       return res.status(403).send("Unauthorized");
