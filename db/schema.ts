@@ -16,9 +16,7 @@ export const investments = pgTable("investments", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  translationKey: text("translation_key", { 
-    enum: ["elite_coffee", "yoga_center", "restaurant_chain"] 
-  }).notNull(),
+  translationKey: text("translation_key").notNull(),
   type: text("type", { enum: ["real_estate", "business"] }).notNull(),
   category: text("category", { 
     enum: [
@@ -40,6 +38,7 @@ export const investments = pgTable("investments", {
   location: text("location").notNull(),
   expectedRoi: decimal("expected_roi", { precision: 5, scale: 2 }).notNull(),
   pricePerToken: decimal("price_per_token", { precision: 10, scale: 2 }).notNull(),
+  currency: text("currency", { enum: ["RUB", "USD"] }).default("RUB").notNull(),
   totalTokens: integer("total_tokens").notNull(),
   availableTokens: integer("available_tokens").notNull(),
   level: integer("level").default(1).notNull(),
