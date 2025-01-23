@@ -12,8 +12,15 @@ export function registerRoutes(app: Express): Server {
   setupAuth(app);
 
   // Serve attached assets statically with proper content type handling
-  app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), {
+  const assetsPath = path.join(process.cwd(), 'attached_assets');
+  console.log('Serving assets from:', assetsPath);
+
+  app.use('/assets', (req, res, next) => {
+    console.log('Asset request:', req.path);
+    next();
+  }, express.static(assetsPath, {
     setHeaders: (res, filePath) => {
+      console.log('Serving file:', filePath);
       // Set proper content type for PNG files
       if (filePath.endsWith('.png')) {
         res.setHeader('Content-Type', 'image/png');
