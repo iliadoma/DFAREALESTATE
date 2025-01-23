@@ -29,7 +29,7 @@ export default function Dashboard() {
   const filteredInvestments = investments?.filter((investment) => {
     if (filters.type && investment.type !== filters.type) return false;
     if (filters.category && investment.category !== filters.category) return false;
-    if (filters.minRoi && investment.expectedRoi < filters.minRoi) return false;
+    if (filters.minRoi && Number(investment.expectedRoi) < filters.minRoi) return false;
     return true;
   });
 
