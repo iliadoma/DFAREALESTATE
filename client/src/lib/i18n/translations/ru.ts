@@ -71,4 +71,28 @@ export const ru = {
       },
     },
   },
+  investment: {
+    level: "Уровень",
+    types: {
+      realEstate: "Недвижимость",
+      business: "Бизнес",
+    },
+    pricePerToken: "Цена за токен",
+    expectedRoi: "Ожидаемый ROI",
+    levelProgress: "Прогресс уровня",
+    yourInvestment: "Ваша инвестиция",
+    tokens: "токенов",
+    signUpToInvest: "Зарегистрируйтесь для инвестирования",
+    purchaseMore: "Купить еще",
+    investNow: "Инвестировать сейчас",
+    purchaseTokens: {
+      title: "Покупка токенов",
+      description: "Введите количество токенов для покупки {name}",
+      numberOfTokens: "Количество токенов",
+      enterAmount: "Введите количество",
+      pricePerToken: "Цена за токен",
+      total: "Итого",
+      confirm: "Подтвердить покупку"
+    }
+  },
 };

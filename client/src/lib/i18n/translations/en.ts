@@ -71,4 +71,28 @@ export const en = {
       },
     },
   },
+  investment: {
+    level: "Level",
+    types: {
+      realEstate: "Real Estate",
+      business: "Business",
+    },
+    pricePerToken: "Price per Token",
+    expectedRoi: "Expected ROI",
+    levelProgress: "Level Progress",
+    yourInvestment: "Your Investment",
+    tokens: "tokens",
+    signUpToInvest: "Sign Up to Invest",
+    purchaseMore: "Purchase More",
+    investNow: "Invest Now",
+    purchaseTokens: {
+      title: "Purchase Tokens",
+      description: "Enter the number of tokens you want to purchase for {name}",
+      numberOfTokens: "Number of Tokens",
+      enterAmount: "Enter amount",
+      pricePerToken: "Price per token",
+      total: "Total",
+      confirm: "Confirm Purchase"
+    }
+  },
 };

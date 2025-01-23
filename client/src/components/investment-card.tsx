@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { useI18n } from "@/lib/i18n/context";
 import type { Investment, Token } from "@db/schema";
 
 type InvestmentCardProps = {
@@ -36,6 +37,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const { purchaseTokens } = useInvestments();
+  const { t } = useI18n();
   const [amount, setAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -71,7 +73,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       {!preview && investment.level > 1 && (
         <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-yellow-500/10 rounded-full">
           <Star className="h-4 w-4 text-yellow-500" />
-          <span className="text-sm font-medium">Level {investment.level}</span>
+          <span className="text-sm font-medium">{t("investment.level")} {investment.level}</span>
         </div>
       )}
       <CardHeader>
@@ -79,7 +81,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           <div>
             <CardTitle>{investment.name}</CardTitle>
             <CardDescription className="mt-1">
-              {investment.type === "real_estate" ? "Real Estate" : "Business"}
+              {t(investment.type === "real_estate" ? "investment.types.realEstate" : "investment.types.business")}
             </CardDescription>
           </div>
           {investment.type === "real_estate" ? (
@@ -98,11 +100,11 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           <p className="text-sm">{investment.description}</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm font-medium">Price per Token</p>
+              <p className="text-sm font-medium">{t("investment.pricePerToken")}</p>
               <p className="text-lg">${Number(investment.pricePerToken).toFixed(2)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium">Expected ROI</p>
+              <p className="text-sm font-medium">{t("investment.expectedRoi")}</p>
               <p className="text-lg text-green-600">
                 {Number(investment.expectedRoi).toFixed(1)}%
               </p>
@@ -111,7 +113,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           {!preview && investment.level > 1 && (
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span>Level Progress</span>
+                <span>{t("investment.levelProgress")}</span>
                 <span>{progressToNextLevel.toFixed(0)}%</span>
               </div>
               <Progress value={progressToNextLevel} className="h-1" />
@@ -119,10 +121,10 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           )}
           {!preview && totalUserTokens > 0 && (
             <div className="pt-2 border-t">
-              <p className="text-sm font-medium">Your Investment</p>
+              <p className="text-sm font-medium">{t("investment.yourInvestment")}</p>
               <p className="text-lg">${investmentValue.toFixed(2)}</p>
               <p className="text-sm text-muted-foreground">
-                {totalUserTokens} tokens
+                {totalUserTokens} {t("investment.tokens")}
               </p>
             </div>
           )}
@@ -131,48 +133,46 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       <CardFooter>
         {preview ? (
           <Button className="w-full" onClick={handleAction}>
-            Sign Up to Invest
+            {t("investment.signUpToInvest")}
           </Button>
         ) : (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button className="w-full" onClick={handleAction}>
-                {totalUserTokens > 0 ? "Purchase More" : "Invest Now"}
+                {totalUserTokens > 0 ? t("investment.purchaseMore") : t("investment.investNow")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Purchase Tokens</DialogTitle>
+                <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
                 <DialogDescription>
-                  Enter the number of tokens you want to purchase for {investment.name}
+                  {t("investment.purchaseTokens.description", { name: investment.name })}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label>Number of Tokens</Label>
+                  <Label>{t("investment.purchaseTokens.numberOfTokens")}</Label>
                   <Input
                     type="number"
                     min="1"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Enter amount"
+                    placeholder={t("investment.purchaseTokens.enterAmount")}
                   />
                 </div>
                 <div className="text-sm">
-                  <p>Price per token: ${Number(investment.pricePerToken).toFixed(2)}</p>
+                  <p>{t("investment.purchaseTokens.pricePerToken")}: ${Number(investment.pricePerToken).toFixed(2)}</p>
                   <p className="font-medium mt-2">
-                    Total: $
-                    {(Number(investment.pricePerToken) * (parseInt(amount) || 0)).toFixed(
-                      2
-                    )}
+                    {t("investment.purchaseTokens.total")}: $
+                    {(Number(investment.pricePerToken) * (parseInt(amount) || 0)).toFixed(2)}
                   </p>
                 </div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsOpen(false)}>
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
-                <Button onClick={handlePurchase}>Confirm Purchase</Button>
+                <Button onClick={handlePurchase}>{t("investment.purchaseTokens.confirm")}</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
