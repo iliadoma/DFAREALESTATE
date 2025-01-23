@@ -10,9 +10,12 @@ import {
 } from "@/components/ui/card";
 import InvestmentCard from "@/components/investment-card";
 import type { Investment } from "@db/schema";
+import { useI18n } from "@/lib/i18n/context";
+import LanguageSwitcher from "@/components/language-switcher";
 
 export default function LandingPage() {
   const [, setLocation] = useLocation();
+  const { t } = useI18n();
 
   const { data: investments } = useQuery<Investment[]>({
     queryKey: ['/api/investments'],
@@ -23,7 +26,10 @@ export default function LandingPage() {
       <header className="border-b">
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">TokenizedAssets</h1>
-          <Button onClick={() => setLocation("/auth")}>Get Started</Button>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <Button onClick={() => setLocation("/auth")}>{t("common.login")}</Button>
+          </div>
         </nav>
       </header>
 
@@ -31,21 +37,20 @@ export default function LandingPage() {
         <section className="container mx-auto px-4 py-16">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-4">
-              Invest in Premium Real Estate & Businesses
+              {t("landing.hero.title")}
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Access fractional ownership of high-quality commercial properties and
-              established businesses through digital asset tokens.
+              {t("landing.hero.description")}
             </p>
             <Button size="lg" onClick={() => setLocation("/auth")}>
-              Start Investing
+              {t("landing.hero.cta")}
             </Button>
           </div>
         </section>
 
         <section className="container mx-auto px-4 py-16">
           <h3 className="text-2xl font-bold text-center mb-8">
-            Featured Investment Opportunities
+            {t("landing.featured.title")}
           </h3>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {investments?.slice(0, 3).map((investment) => (
@@ -59,7 +64,7 @@ export default function LandingPage() {
           </div>
           <div className="text-center mt-8">
             <Button variant="outline" onClick={() => setLocation("/auth")}>
-              View All Opportunities
+              {t("landing.featured.viewAll")}
             </Button>
           </div>
         </section>
@@ -67,45 +72,42 @@ export default function LandingPage() {
         <section className="bg-muted py-16">
           <div className="container mx-auto px-4">
             <h3 className="text-2xl font-bold text-center mb-8">
-              Why Choose TokenizedAssets?
+              {t("landing.features.title")}
             </h3>
             <div className="grid md:grid-cols-3 gap-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Fractional Ownership</CardTitle>
+                  <CardTitle>{t("landing.features.ownership.title")}</CardTitle>
                   <CardDescription>
-                    Invest in premium assets with minimal capital
+                    {t("landing.features.ownership.subtitle")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  Start with as little as you want and gradually build your
-                  portfolio of tokenized assets.
+                  {t("landing.features.ownership.description")}
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Monthly Income</CardTitle>
+                  <CardTitle>{t("landing.features.income.title")}</CardTitle>
                   <CardDescription>
-                    Earn regular returns from your investments
+                    {t("landing.features.income.subtitle")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  Receive your share of rental income and business profits
-                  directly.
+                  {t("landing.features.income.description")}
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Liquidity</CardTitle>
+                  <CardTitle>{t("landing.features.liquidity.title")}</CardTitle>
                   <CardDescription>
-                    Trade your tokens easily
+                    {t("landing.features.liquidity.subtitle")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  Sell your tokens on our secondary market when you need
-                  liquidity.
+                  {t("landing.features.liquidity.description")}
                 </CardContent>
               </Card>
             </div>
@@ -115,7 +117,7 @@ export default function LandingPage() {
 
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © 2024 TokenizedAssets. All rights reserved.
+          {t("landing.footer")} © 2024 TokenizedAssets.
         </div>
       </footer>
     </div>
