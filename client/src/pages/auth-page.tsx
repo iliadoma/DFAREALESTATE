@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,9 +38,17 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
-  const { login, register } = useUser();
+  const { user, login, register } = useUser();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (user) {
+      setLocation("/dashboard");
+    }
+  }, [user, setLocation]);
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,7 +65,6 @@ export default function AuthPage() {
       } else {
         await register(data);
       }
-      // Redirect to dashboard after successful auth
       setLocation("/dashboard");
     } catch (error: any) {
       console.error("Auth error:", error);
@@ -70,6 +77,9 @@ export default function AuthPage() {
       setIsLoading(false);
     }
   };
+
+  // If authenticated, don't render the auth page
+  if (user) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">

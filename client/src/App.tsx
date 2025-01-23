@@ -22,18 +22,25 @@ function Router() {
 
   return (
     <Switch>
-      {/* Public routes */}
-      <Route path="/" component={LandingPage} />
-      <Route path="/auth" component={AuthPage} />
-
-      {/* Protected routes - only accessible when logged in */}
-      {user ? (
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
+      {/* Public routes - only show when not authenticated */}
+      {!user ? (
+        <>
+          <Route path="/" component={LandingPage} />
+          <Route path="/auth" component={AuthPage} />
+        </>
       ) : null}
 
-      {/* Redirect unauthenticated users to landing page */}
+      {/* Protected routes - only show when authenticated */}
+      {user ? (
+        <>
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/">
+            <Dashboard />
+          </Route>
+        </>
+      ) : null}
+
+      {/* 404 for authenticated users, redirect to landing for unauthenticated */}
       <Route>
         {user ? <NotFound /> : <LandingPage />}
       </Route>
