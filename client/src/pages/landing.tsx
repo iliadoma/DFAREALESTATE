@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,14 +9,14 @@ import {
 } from "@/components/ui/card";
 
 export default function LandingPage() {
+  const [, setLocation] = useLocation();
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">TokenizedAssets</h1>
-          <Link href="/auth">
-            <Button>Get Started</Button>
-          </Link>
+          <Button onClick={() => setLocation("/auth")}>Get Started</Button>
         </nav>
       </header>
 
@@ -30,9 +30,9 @@ export default function LandingPage() {
               Access fractional ownership of high-quality commercial properties and
               established businesses through digital asset tokens.
             </p>
-            <Link href="/auth">
-              <Button size="lg">Start Investing</Button>
-            </Link>
+            <Button size="lg" onClick={() => setLocation("/auth")}>
+              Start Investing
+            </Button>
           </div>
         </section>
 

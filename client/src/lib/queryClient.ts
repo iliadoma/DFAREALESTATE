@@ -9,6 +9,10 @@ export const queryClient = new QueryClient({
         });
 
         if (!res.ok) {
+          if (res.status === 401) {
+            return null;
+          }
+
           if (res.status >= 500) {
             throw new Error(`${res.status}: ${res.statusText}`);
           }
@@ -18,9 +22,7 @@ export const queryClient = new QueryClient({
 
         return res.json();
       },
-      refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
       retry: false,
     },
     mutations: {

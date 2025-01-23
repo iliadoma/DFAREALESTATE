@@ -6,6 +6,7 @@ import { investments, tokens, distributions, insertInvestmentSchema } from "@db/
 import { eq, and } from "drizzle-orm";
 
 export function registerRoutes(app: Express): Server {
+  // Set up authentication routes and middleware
   setupAuth(app);
 
   // Investment routes
@@ -27,20 +28,20 @@ export function registerRoutes(app: Express): Server {
         .from(investments)
         .where(eq(investments.id, parseInt(req.params.id)))
         .limit(1);
-      
+
       if (!investment) {
         return res.status(404).send("Investment not found");
       }
-      
+
       res.json(investment);
     } catch (error) {
       res.status(500).send("Error fetching investment");
     }
   });
-  
+
   app.post("/api/investments", async (req, res) => {
-    if (!req.isAuthenticated() || req.user.role !== "admin") {
-      return res.status(403).send("Unauthorized");
+    if (!req.isAuthenticated()) {
+      return res.status(401).send("Unauthorized");
     }
 
     try {
@@ -68,7 +69,7 @@ export function registerRoutes(app: Express): Server {
 
     try {
       const userTokens = await db.query.tokens.findMany({
-        where: eq(tokens.userId, req.user.id),
+        where: eq(tokens.userId, req.user!.id),
         with: {
           investment: true
         }
@@ -105,7 +106,7 @@ export function registerRoutes(app: Express): Server {
         .insert(tokens)
         .values({
           investmentId,
-          userId: req.user.id,
+          userId: req.user!.id,
           amount,
           purchasePrice: investment.pricePerToken
         })
@@ -114,29 +115,6 @@ export function registerRoutes(app: Express): Server {
       res.json(token);
     } catch (error) {
       res.status(500).send("Error purchasing tokens");
-    }
-  });
-
-  // Distribution routes
-  app.get("/api/distributions", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).send("Not authenticated");
-    }
-
-    try {
-      const userDistributions = await db
-        .select({
-          distribution: distributions,
-          investment: investments
-        })
-        .from(distributions)
-        .innerJoin(tokens, eq(tokens.investmentId, distributions.investmentId))
-        .innerJoin(investments, eq(investments.id, distributions.investmentId))
-        .where(eq(tokens.userId, req.user.id));
-
-      res.json(userDistributions);
-    } catch (error) {
-      res.status(500).send("Error fetching distributions");
     }
   });
 
