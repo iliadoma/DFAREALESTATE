@@ -22,8 +22,11 @@ export const queryClient = new QueryClient({
 
         return res.json();
       },
+      refetchInterval: false,
       refetchOnWindowFocus: false,
+      staleTime: 30000, // Consider data fresh for 30 seconds
       retry: false,
+      refetchOnMount: false,
     },
     mutations: {
       retry: false,

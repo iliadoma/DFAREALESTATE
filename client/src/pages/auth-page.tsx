@@ -38,16 +38,16 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
-  const { user, login, register } = useUser();
+  const { user, login, register, isLoading: isUserLoading } = useUser();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // If already authenticated, redirect to dashboard
   useEffect(() => {
-    if (user) {
+    if (user && !isUserLoading) {
       setLocation("/dashboard");
     }
-  }, [user, setLocation]);
+  }, [user, isUserLoading, setLocation]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -58,14 +58,15 @@ export default function AuthPage() {
   });
 
   const onSubmit = async (data: FormData, isLogin: boolean) => {
-    setIsLoading(true);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
       if (isLogin) {
         await login(data);
       } else {
         await register(data);
       }
-      setLocation("/dashboard");
     } catch (error: any) {
       console.error("Auth error:", error);
       toast({
@@ -74,9 +75,12 @@ export default function AuthPage() {
         description: error.message || "Authentication failed",
       });
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  // Show loading state while checking auth status
+  if (isUserLoading) return null;
 
   // If authenticated, don't render the auth page
   if (user) return null;
@@ -132,9 +136,9 @@ export default function AuthPage() {
                   <Button
                     type="submit"
                     className="w-full"
-                    disabled={isLoading}
+                    disabled={isSubmitting}
                   >
-                    {isLoading ? "Loading..." : "Login"}
+                    {isSubmitting ? "Loading..." : "Login"}
                   </Button>
                 </form>
               </Form>
@@ -175,9 +179,9 @@ export default function AuthPage() {
                   <Button
                     type="submit"
                     className="w-full"
-                    disabled={isLoading}
+                    disabled={isSubmitting}
                   >
-                    {isLoading ? "Loading..." : "Register"}
+                    {isSubmitting ? "Loading..." : "Register"}
                   </Button>
                 </form>
               </Form>

@@ -12,6 +12,7 @@ import Dashboard from "@/pages/dashboard";
 function Router() {
   const { user, isLoading } = useUser();
 
+  // Show loading spinner while checking authentication status
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -25,7 +26,6 @@ function Router() {
     return (
       <Switch>
         <Route path="/auth" component={AuthPage} />
-        <Route path="/" component={LandingPage} />
         <Route>
           <LandingPage />
         </Route>
@@ -37,8 +37,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/" component={Dashboard} />
-      <Route component={NotFound} />
+      <Route>
+        <Dashboard />
+      </Route>
     </Switch>
   );
 }
