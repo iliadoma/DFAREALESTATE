@@ -119,7 +119,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <CardTitle className="leading-tight">
-              {t(`investment.names.${investment.translationKey}.name`)}
+              {investment.name}
             </CardTitle>
             <CardDescription>
               {t(investment.type === "real_estate" ? "investment.types.realEstate" : "investment.types.business")}
@@ -137,7 +137,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
           <div className="flex items-center text-sm text-muted-foreground">
             <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
             <span className="truncate">
-              {t(`investment.names.${investment.translationKey}.location`)}
+              {investment.location}
             </span>
           </div>
           <p className="text-sm line-clamp-2">
