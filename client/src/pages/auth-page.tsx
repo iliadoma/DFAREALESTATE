@@ -27,6 +27,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -38,6 +39,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { login, register } = useUser();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -55,9 +57,15 @@ export default function AuthPage() {
       } else {
         await register(data);
       }
-      setLocation("/");
-    } catch (error) {
+      // Redirect to dashboard after successful auth
+      setLocation("/dashboard");
+    } catch (error: any) {
       console.error("Auth error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Authentication failed",
+      });
     } finally {
       setIsLoading(false);
     }
