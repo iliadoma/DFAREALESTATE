@@ -97,7 +97,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
             <MapPin className="h-4 w-4 mr-1" />
             {investment.location}
           </div>
-          <p className="text-sm">{investment.description}</p>
+          <p className="text-sm">{t(`investment.descriptions.${investment.category}`)}</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium">{t("investment.pricePerToken")}</p>
