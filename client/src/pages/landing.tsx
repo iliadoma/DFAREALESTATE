@@ -1,4 +1,5 @@
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,9 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import InvestmentCard from "@/components/investment-card";
+import type { Investment } from "@db/schema";
 
 export default function LandingPage() {
   const [, setLocation] = useLocation();
+
+  const { data: investments } = useQuery<Investment[]>({
+    queryKey: ['/api/investments'],
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,6 +39,27 @@ export default function LandingPage() {
             </p>
             <Button size="lg" onClick={() => setLocation("/auth")}>
               Start Investing
+            </Button>
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 py-16">
+          <h3 className="text-2xl font-bold text-center mb-8">
+            Featured Investment Opportunities
+          </h3>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {investments?.slice(0, 3).map((investment) => (
+              <InvestmentCard
+                key={investment.id}
+                investment={investment}
+                userTokens={[]}
+                preview
+              />
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Button variant="outline" onClick={() => setLocation("/auth")}>
+              View All Opportunities
             </Button>
           </div>
         </section>

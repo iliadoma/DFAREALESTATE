@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Building2, MapPin, TrendingUp } from "lucide-react";
 import { useInvestments } from "@/hooks/use-investments";
+import { useUser } from "@/hooks/use-user";
+import { useLocation } from "wouter";
 import {
   Card,
   CardContent,
@@ -26,9 +28,12 @@ import type { Investment, Token } from "@db/schema";
 type InvestmentCardProps = {
   investment: Investment;
   userTokens: Token[];
+  preview?: boolean;
 };
 
-export default function InvestmentCard({ investment, userTokens }: InvestmentCardProps) {
+export default function InvestmentCard({ investment, userTokens, preview }: InvestmentCardProps) {
+  const [, setLocation] = useLocation();
+  const { user } = useUser();
   const { purchaseTokens } = useInvestments();
   const [amount, setAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +51,14 @@ export default function InvestmentCard({ investment, userTokens }: InvestmentCar
     });
     setIsOpen(false);
     setAmount("");
+  };
+
+  const handleAction = () => {
+    if (preview) {
+      setLocation("/auth");
+      return;
+    }
+    setIsOpen(true);
   };
 
   return (
@@ -84,7 +97,7 @@ export default function InvestmentCard({ investment, userTokens }: InvestmentCar
               </p>
             </div>
           </div>
-          {totalUserTokens > 0 && (
+          {!preview && totalUserTokens > 0 && (
             <div className="pt-2 border-t">
               <p className="text-sm font-medium">Your Investment</p>
               <p className="text-lg">${investmentValue.toFixed(2)}</p>
@@ -96,48 +109,54 @@ export default function InvestmentCard({ investment, userTokens }: InvestmentCar
         </div>
       </CardContent>
       <CardFooter>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="w-full">
-              {totalUserTokens > 0 ? "Purchase More" : "Invest Now"}
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Purchase Tokens</DialogTitle>
-              <DialogDescription>
-                Enter the number of tokens you want to purchase for {investment.name}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label>Number of Tokens</Label>
-                <Input
-                  type="number"
-                  min="1"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Enter amount"
-                />
-              </div>
-              <div className="text-sm">
-                <p>Price per token: ${Number(investment.pricePerToken).toFixed(2)}</p>
-                <p className="font-medium mt-2">
-                  Total: $
-                  {(Number(investment.pricePerToken) * (parseInt(amount) || 0)).toFixed(
-                    2
-                  )}
-                </p>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsOpen(false)}>
-                Cancel
+        {preview ? (
+          <Button className="w-full" onClick={handleAction}>
+            Sign Up to Invest
+          </Button>
+        ) : (
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button className="w-full" onClick={handleAction}>
+                {totalUserTokens > 0 ? "Purchase More" : "Invest Now"}
               </Button>
-              <Button onClick={handlePurchase}>Confirm Purchase</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Purchase Tokens</DialogTitle>
+                <DialogDescription>
+                  Enter the number of tokens you want to purchase for {investment.name}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label>Number of Tokens</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter amount"
+                  />
+                </div>
+                <div className="text-sm">
+                  <p>Price per token: ${Number(investment.pricePerToken).toFixed(2)}</p>
+                  <p className="font-medium mt-2">
+                    Total: $
+                    {(Number(investment.pricePerToken) * (parseInt(amount) || 0)).toFixed(
+                      2
+                    )}
+                  </p>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handlePurchase}>Confirm Purchase</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </CardFooter>
     </Card>
   );
