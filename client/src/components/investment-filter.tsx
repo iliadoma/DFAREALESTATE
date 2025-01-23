@@ -20,6 +20,12 @@ import {
   ShoppingBag,
   Users
 } from "lucide-react";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 type FilterProps = {
   onFilterChange: (filters: {
@@ -77,70 +83,71 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
   };
 
   return (
-    <div className={`grid gap-6 md:grid-cols-2 lg:grid-cols-4 ${className}`}>
-      <div className="space-y-2">
-        <Label>Investment Type</Label>
-        <Select value={type} onValueChange={handleTypeChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="All Types" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="real_estate">Real Estate</SelectItem>
-            <SelectItem value="business">Business</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+    <div className={`space-y-6 ${className}`}>
+      <Tabs defaultValue={type || "real_estate"} onValueChange={(v: "real_estate" | "business") => handleTypeChange(v)}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="real_estate" className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            Real Estate
+          </TabsTrigger>
+          <TabsTrigger value="business" className="flex items-center gap-2">
+            <Store className="h-4 w-4" />
+            Lifestyle Business
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-      <div className="space-y-2">
-        <Label>Category</Label>
-        <Select
-          value={category}
-          onValueChange={handleCategoryChange}
-          disabled={!type}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            {type &&
-              categories[type].map(({ value, label, icon: Icon }) => (
-                <SelectItem key={value} value={value}>
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </div>
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex justify-between">
-          <Label>Minimum ROI</Label>
-          <span className="text-sm text-muted-foreground">{minRoi}%</span>
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="space-y-2">
+          <Label>Category</Label>
+          <Select
+            value={category}
+            onValueChange={handleCategoryChange}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              {type &&
+                categories[type].map(({ value, label, icon: Icon }) => (
+                  <SelectItem key={value} value={value}>
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {label}
+                    </div>
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
         </div>
-        <Slider
-          defaultValue={[0]}
-          max={30}
-          step={1}
-          onValueChange={handleRoiChange}
-        />
-      </div>
 
-      <div className="space-y-4">
-        <div className="flex justify-between">
-          <Label>Max Investment</Label>
-          <span className="text-sm text-muted-foreground">
-            ${maxPrice.toLocaleString()}
-          </span>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <Label>Minimum ROI</Label>
+            <span className="text-sm text-muted-foreground">{minRoi}%</span>
+          </div>
+          <Slider
+            defaultValue={[0]}
+            max={30}
+            step={1}
+            onValueChange={handleRoiChange}
+          />
         </div>
-        <Slider
-          defaultValue={[100000]}
-          max={1000000}
-          step={10000}
-          onValueChange={handlePriceChange}
-        />
+
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <Label>Max Investment</Label>
+            <span className="text-sm text-muted-foreground">
+              ${maxPrice.toLocaleString()}
+            </span>
+          </div>
+          <Slider
+            defaultValue={[100000]}
+            max={1000000}
+            step={10000}
+            onValueChange={handlePriceChange}
+          />
+        </div>
       </div>
     </div>
   );

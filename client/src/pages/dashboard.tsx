@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { useUser } from "@/hooks/use-user";
 import { useInvestments } from "@/hooks/use-investments";
@@ -12,26 +12,63 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import InvestmentCard from "@/components/investment-card";
 import InvestmentFilter from "@/components/investment-filter";
 import PortfolioChart from "@/components/portfolio-chart";
-import { Trophy, Star, Building2, LineChart, LogOut, Wallet } from "lucide-react";
+import { Trophy, Star, Building2, Store, LineChart, LogOut, Wallet } from "lucide-react";
 
 type FilterState = {
   type?: "real_estate" | "business";
   category?: string;
   minRoi?: number;
+  maxPrice?: number;
 };
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { user, logout } = useUser();
   const { investments, portfolio, isLoading } = useInvestments();
-  const [filters, setFilters] = useState<FilterState>({});
+  const [filters, setFilters] = useState<FilterState>({
+    type: "real_estate" // Default to real estate view
+  });
 
   // XP needed for next level (simple calculation)
   const xpForNextLevel = (user?.level || 1) * 1000;
   const progressToNextLevel = ((user?.experience || 0) / xpForNextLevel) * 100;
+
+  // Calculate portfolio statistics
+  const stats = useMemo(() => {
+    const realEstateInvestments = portfolio?.filter(t => 
+      investments?.find(i => i.id === t.investmentId)?.type === 'real_estate'
+    ) || [];
+
+    const businessInvestments = portfolio?.filter(t => 
+      investments?.find(i => i.investmentId === t.id)?.type === 'business'
+    ) || [];
+
+    return {
+      realEstate: {
+        count: realEstateInvestments.length,
+        value: realEstateInvestments.reduce(
+          (sum, token) => sum + Number(token.purchasePrice) * token.amount,
+          0
+        ),
+      },
+      business: {
+        count: businessInvestments.length,
+        value: businessInvestments.reduce(
+          (sum, token) => sum + Number(token.purchasePrice) * token.amount,
+          0
+        ),
+      },
+    };
+  }, [portfolio, investments]);
 
   // Redirect to landing if not authenticated
   useEffect(() => {
@@ -49,13 +86,9 @@ export default function Dashboard() {
     if (filters.type && investment.type !== filters.type) return false;
     if (filters.category && investment.category !== filters.category) return false;
     if (filters.minRoi && Number(investment.expectedRoi) < filters.minRoi) return false;
+    if (filters.maxPrice && Number(investment.pricePerToken) > filters.maxPrice) return false;
     return true;
   });
-
-  const totalPortfolioValue = portfolio?.reduce(
-    (sum, token) => sum + Number(token.purchasePrice) * token.amount,
-    0
-  ) ?? 0;
 
   // If no user, don't render dashboard
   if (!user) return null;
@@ -87,32 +120,38 @@ export default function Dashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-4 mb-8">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Portfolio Value
+                Real Estate Value
               </CardTitle>
-              <Wallet className="h-4 w-4 text-muted-foreground" />
+              <Building2 className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${totalPortfolioValue.toFixed(2)}
+                ${stats.realEstate.value.toFixed(2)}
               </div>
+              <p className="text-xs text-muted-foreground">
+                {stats.realEstate.count} properties
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Active Investments
+                Business Value
               </CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+              <Store className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {portfolio?.length ?? 0}
+                ${stats.business.value.toFixed(2)}
               </div>
+              <p className="text-xs text-muted-foreground">
+                {stats.business.count} businesses
+              </p>
             </CardContent>
           </Card>
 
