@@ -84,11 +84,19 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   };
 
   const handleAction = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
+
+    if (!user) {
+      setLocation("/auth");
+      return;
+    }
+
     if (preview) {
       setLocation("/auth");
       return;
     }
+
     setIsOpen(true);
   };
 
@@ -185,7 +193,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       </CardContent>
 
       <CardFooter className="px-6 pb-6 pt-0">
-        {preview ? (
+        {preview && !user ? (
           <Button className="w-full" size="lg" onClick={handleAction}>
             {t("investment.signUpToInvest")}
           </Button>
