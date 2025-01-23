@@ -109,7 +109,9 @@ export default function Dashboard() {
                 </SheetTrigger>
                 <SheetContent>
                   <SheetHeader>
-                    <SheetTitle>{t("common.welcome")}, {user?.username}</SheetTitle>
+                    <SheetTitle>
+                      {t("dashboard.portfolio.title")}
+                    </SheetTitle>
                   </SheetHeader>
                   <div className="mt-4 space-y-4">
                     <div className="flex items-center gap-2">
@@ -139,9 +141,6 @@ export default function Dashboard() {
                 </div>
                 <Star className="h-6 w-6 text-yellow-500" />
               </div>
-              <span className="text-sm text-muted-foreground">
-                {t("common.welcome")}, {user?.username}
-              </span>
               <LanguageSwitcher />
               <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
