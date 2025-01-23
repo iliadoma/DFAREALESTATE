@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useI18n } from "@/lib/i18n/context";
 import type { Investment, Token } from "@db/schema";
+import { useToast } from "@/hooks/use-toast";
 
 type InvestmentCardProps = {
   investment: Investment;
@@ -38,8 +39,10 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
   const { user } = useUser();
   const { purchaseTokens } = useInvestments();
   const { t } = useI18n();
+  const { toast } = useToast();
   const [amount, setAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const totalUserTokens = userTokens.reduce((sum, token) => sum + token.amount, 0);
   const investmentValue = Number(investment.pricePerToken) * totalUserTokens;
@@ -49,17 +52,41 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
 
   const handlePurchase = async () => {
     const tokenAmount = parseInt(amount);
-    if (isNaN(tokenAmount) || tokenAmount <= 0) return;
+    if (isNaN(tokenAmount) || tokenAmount <= 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid amount",
+        description: "Please enter a valid number of tokens"
+      });
+      return;
+    }
 
-    await purchaseTokens({
-      investmentId: investment.id,
-      amount: tokenAmount,
-    });
-    setIsOpen(false);
-    setAmount("");
+    if (tokenAmount > investment.availableTokens) {
+      toast({
+        variant: "destructive",
+        title: "Not enough tokens",
+        description: `Only ${investment.availableTokens} tokens available`
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await purchaseTokens({
+        investmentId: investment.id,
+        amount: tokenAmount,
+      });
+      setIsOpen(false);
+      setAmount("");
+    } catch (error) {
+      console.error('Purchase failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleAction = () => {
+  const handleAction = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click when clicking the button
     if (preview) {
       setLocation("/auth");
       return;
@@ -160,9 +187,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
               <DialogHeader>
                 <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
                 <DialogDescription>
-                  {t("investment.purchaseTokens.description", {
-                    name: t(`investment.names.${investment.translationKey}.name`),
-                  })}
+                  {t("investment.purchaseTokens.description")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -171,6 +196,7 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
                   <Input
                     type="number"
                     min="1"
+                    max={investment.availableTokens}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder={t("investment.purchaseTokens.enterAmount")}
@@ -188,7 +214,9 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
                 <Button variant="outline" onClick={() => setIsOpen(false)}>
                   {t("common.cancel")}
                 </Button>
-                <Button onClick={handlePurchase}>{t("investment.purchaseTokens.confirm")}</Button>
+                <Button onClick={handlePurchase} disabled={isLoading}>
+                  {isLoading ? t("common.loading") : t("investment.purchaseTokens.confirm")}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
