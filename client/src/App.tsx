@@ -20,25 +20,19 @@ function Router() {
     );
   }
 
-  if (!user) {
-    return (
-      <Switch>
-        <Route path="/" component={LandingPage} />
-        <Route path="/auth" component={AuthPage} />
-        <Route component={NotFound} />
-      </Switch>
-    );
-  }
-
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/auth" component={AuthPage} />
+      {user ? (
+        <Route path="/dashboard" component={Dashboard} />
+      ) : null}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
@@ -46,5 +40,3 @@ function App() {
     </QueryClientProvider>
   );
 }
-
-export default App;
