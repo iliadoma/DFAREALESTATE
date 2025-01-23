@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Building2, Store, MapPin, TrendingUp, Star } from "lucide-react";
+import { Building2, Store, MapPin, Star } from "lucide-react";
 import { useInvestments } from "@/hooks/use-investments";
 import { useUser } from "@/hooks/use-user";
 import { useLocation } from "wouter";
@@ -99,12 +99,11 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
       setLocation("/auth");
       return;
     }
-
     setIsOpen(true);
   };
 
   const handleCardClick = () => {
-    if (!preview && user) {
+    if (!preview) {
       setLocation(`/investments/${investment.id}`);
     }
   };
@@ -115,7 +114,6 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
         className="group relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer bg-white"
         onClick={handleCardClick}
       >
-        {/* Image Section */}
         <div className="relative h-48 overflow-hidden">
           <img
             src={investment.imageUrl}
@@ -142,7 +140,6 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
 
         <CardContent className="p-6">
           <div className="space-y-4">
-            {/* Header */}
             <div className="flex justify-between items-start">
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg leading-tight">
@@ -160,7 +157,6 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
               )}
             </div>
 
-            {/* Investment Details */}
             <div className="grid grid-cols-2 gap-6 py-4 border-y">
               <div>
                 <p className="text-sm text-muted-foreground">{t("investment.expectedRoi")}</p>
@@ -176,12 +172,10 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
               </div>
             </div>
 
-            {/* Description */}
             <p className="text-sm text-muted-foreground line-clamp-2">
               {investment.description}
             </p>
 
-            {/* User Investment Info */}
             {!preview && totalUserTokens > 0 && (
               <div className="pt-4 border-t">
                 <p className="text-sm font-medium">{t("investment.yourInvestment")}</p>
@@ -197,52 +191,58 @@ export default function InvestmentCard({ investment, userTokens, preview }: Inve
         </CardContent>
 
         <CardFooter className="px-6 pb-6 pt-0">
-          <Button className="w-full" size="lg" onClick={handleInvestClick}>
+          <Button 
+            className="w-full" 
+            size="lg" 
+            onClick={handleInvestClick}
+          >
             {!user ? t("investment.signUpToInvest") : 
               totalUserTokens > 0 ? t("investment.purchaseMore") : t("investment.investNow")}
           </Button>
         </CardFooter>
       </Card>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
-            <DialogDescription>
-              {t("investment.purchaseTokens.description")}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>{t("investment.purchaseTokens.numberOfTokens")}</Label>
-              <Input
-                type="number"
-                min="1"
-                max={investment.availableTokens}
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder={t("investment.purchaseTokens.enterAmount")}
-              />
+      {user && (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{t("investment.purchaseTokens.title")}</DialogTitle>
+              <DialogDescription>
+                {t("investment.purchaseTokens.description", { name: investment.name })}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>{t("investment.purchaseTokens.numberOfTokens")}</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  max={investment.availableTokens}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder={t("investment.purchaseTokens.enterAmount")}
+                />
+              </div>
+              <div className="text-sm">
+                <p>
+                  {t("investment.purchaseTokens.pricePerToken")}: {formatCurrency(Number(investment.pricePerToken), investment.currency)}
+                </p>
+                <p className="font-medium mt-2">
+                  {t("investment.purchaseTokens.total")}: {formatCurrency((Number(investment.pricePerToken) * (parseInt(amount) || 0)), investment.currency)}
+                </p>
+              </div>
             </div>
-            <div className="text-sm">
-              <p>
-                {t("investment.purchaseTokens.pricePerToken")}: {formatCurrency(Number(investment.pricePerToken), investment.currency)}
-              </p>
-              <p className="font-medium mt-2">
-                {t("investment.purchaseTokens.total")}: {formatCurrency((Number(investment.pricePerToken) * (parseInt(amount) || 0)), investment.currency)}
-              </p>
-            </div>
-          </div>
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
-              {t("common.cancel")}
-            </Button>
-            <Button onClick={handlePurchase} disabled={isLoading}>
-              {isLoading ? t("common.loading") : t("investment.purchaseTokens.confirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button variant="outline" onClick={() => setIsOpen(false)}>
+                {t("common.cancel")}
+              </Button>
+              <Button onClick={handlePurchase} disabled={isLoading}>
+                {isLoading ? t("common.loading") : t("investment.purchaseTokens.confirm")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }
