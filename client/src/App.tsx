@@ -22,12 +22,21 @@ function Router() {
 
   return (
     <Switch>
+      {/* Public routes */}
       <Route path="/" component={LandingPage} />
       <Route path="/auth" component={AuthPage} />
+
+      {/* Protected routes - only accessible when logged in */}
       {user ? (
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/dashboard">
+          <Dashboard />
+        </Route>
       ) : null}
-      <Route component={NotFound} />
+
+      {/* Redirect unauthenticated users to landing page */}
+      <Route>
+        {user ? <NotFound /> : <LandingPage />}
+      </Route>
     </Switch>
   );
 }

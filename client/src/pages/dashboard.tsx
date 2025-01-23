@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { useUser } from "@/hooks/use-user";
 import { useInvestments } from "@/hooks/use-investments";
 import { Button } from "@/components/ui/button";
@@ -22,9 +23,22 @@ type FilterState = {
 };
 
 export default function Dashboard() {
+  const [, setLocation] = useLocation();
   const { user, logout } = useUser();
   const { investments, portfolio, isLoading } = useInvestments();
   const [filters, setFilters] = useState<FilterState>({});
+
+  // Redirect to landing if not authenticated
+  useEffect(() => {
+    if (!user) {
+      setLocation("/");
+    }
+  }, [user, setLocation]);
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation("/");
+  };
 
   const filteredInvestments = investments?.filter((investment) => {
     if (filters.type && investment.type !== filters.type) return false;
@@ -38,6 +52,9 @@ export default function Dashboard() {
     0
   ) ?? 0;
 
+  // If no user, don't render dashboard
+  if (!user) return null;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
@@ -47,7 +64,7 @@ export default function Dashboard() {
             <span className="text-sm text-muted-foreground">
               Welcome, {user?.username}
             </span>
-            <Button variant="outline" size="sm" onClick={() => logout()}>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Logout
             </Button>
