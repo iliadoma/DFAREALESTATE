@@ -12,7 +12,7 @@ export const ru = {
     back: "Назад",
   },
   auth: {
-    loginTitle: "Добро пожаловать в TokenizedAssets",
+    loginTitle: "Добро пожаловать в metr.digital",
     loginDescription: "Управляйте вашими цифровыми инвестициями",
     registerSuccess: "Регистрация успешна",
     loginSuccess: "Вход выполнен успешно",
@@ -29,7 +29,7 @@ export const ru = {
       viewAll: "Посмотреть Все Возможности",
     },
     features: {
-      title: "Почему Выбирают TokenizedAssets?",
+      title: "Почему Выбирают metr.digital?",
       ownership: {
         title: "Долевое Владение",
         subtitle: "Инвестируйте в премиальные активы с минимальным капиталом",
@@ -56,7 +56,6 @@ export const ru = {
       businesses: "бизнесов",
       achievements: "Достижения",
       performance: "Производительность",
-      title: "Портфель",
     },
     investments: {
       title: "Инвестиционные возможности",
@@ -64,6 +63,7 @@ export const ru = {
       categories: {
         realEstate: "Недвижимость",
         business: "Бизнес",
+        all: "Все категории"
       },
       filters: {
         category: "Категория",
