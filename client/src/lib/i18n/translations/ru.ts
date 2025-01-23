@@ -90,6 +90,20 @@ export const ru = {
       office_space: "Современное офисное помещение в деловом районе",
       warehouse: "Стратегически расположенный склад с хорошей транспортной доступностью"
     },
+    names: {
+      elite_coffee: {
+        name: "Элитная сеть кофеен",
+        location: "Москва"
+      },
+      yoga_center: {
+        name: "Йога-студия Дзен",
+        location: "Санкт-Петербург"
+      },
+      restaurant_chain: {
+        name: "Гурмэ Ресторан Групп",
+        location: "Москва"
+      }
+    },
     pricePerToken: "Цена за токен",
     expectedRoi: "Ожидаемый ROI",
     levelProgress: "Прогресс уровня",

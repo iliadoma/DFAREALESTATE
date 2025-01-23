@@ -90,6 +90,20 @@ export const en = {
       office_space: "Modern office space in business district",
       warehouse: "Strategic warehouse location with good connectivity"
     },
+    names: {
+      elite_coffee: {
+        name: "Elite Coffee Shop Chain",
+        location: "Moscow"
+      },
+      yoga_center: {
+        name: "Zen Yoga Studio",
+        location: "Saint Petersburg"
+      },
+      restaurant_chain: {
+        name: "Gourmet Restaurant Group",
+        location: "Moscow"
+      }
+    },
     pricePerToken: "Price per Token",
     expectedRoi: "Expected ROI",
     levelProgress: "Level Progress",
