@@ -1,0 +1,104 @@
+"I want to build a scalable platform for tokenizing commercial real estate and lifestyle businesses, leveraging Digital Financial Assets (ЦФА) technology available in Russia. The architecture should be designed to support this functionality, but no direct blockchain integration is required at this stage. Here’s what I need:
+
+1. Scalability and Architecture
+Modular Architecture:
+
+Implement a modular, service-oriented architecture where key features (e.g., ЦФА tokenization, user management, transaction handling, analytics) are independent modules.
+Ensure flexibility for future integration with ЦФА operators and services without requiring significant refactoring.
+Database Design:
+
+Use a relational database (e.g., PostgreSQL) for core data storage, such as users, investments, and transactions.
+Create a schema optimized for handling tokenized assets, rental agreements, and financial distributions.
+Include tables for:
+Investment opportunities (real estate and businesses).
+Token ownership and transaction history.
+Monthly income distribution.
+API Design:
+
+Build a RESTful or GraphQL API layer to handle communication between the front end, back end, and future ЦФА infrastructure.
+Ensure the APIs are versioned and extensible for new features.
+Event-Driven Architecture:
+
+Use an event queue system (e.g., RabbitMQ, Kafka) for asynchronous tasks, such as income distribution, notifications, or analytics processing.
+2. ЦФА Tokenization and Financial Operations
+Digital Token Management:
+
+Design the architecture to handle the creation and management of ЦФА tokens, including:
+Token metadata (e.g., ownership percentage, value, linked asset).
+Tracking ownership changes during sales or transfers.
+Ensure token data is securely stored and compliant with regulations.
+Income Distribution:
+
+Build a module to calculate and distribute monthly income (e.g., rental income or business profits) to token holders.
+Automate reporting for financial operations, including transaction summaries and tax-related data.
+Integration Points for ЦФА Operators:
+
+Define placeholder interfaces for future integration with ЦФА operators (e.g., Сбер, Атомайз).
+Design API hooks to handle:
+Token issuance.
+Transaction processing.
+Income distribution and reporting.
+3. Front-End Design
+Investment Classifier:
+
+Allow users to filter and explore investments by:
+Type (real estate or businesses).
+Category (e.g., cafes, fitness centers).
+ROI, location, and other parameters.
+Display investment cards with dynamic data (e.g., expected income, asset details).
+User Dashboards:
+
+Investor Dashboard:
+Show token ownership, monthly income, and portfolio performance.
+Provide tools for token resale and income reinvestment.
+Admin Dashboard:
+Manage investment opportunities, oversee transactions, and monitor system performance.
+Landing Page:
+
+Create an engaging landing page to attract investors and showcase:
+Benefits of investing in tokenized assets.
+Example opportunities (e.g., stable real estate and high-return businesses).
+4. Compliance and Security
+Compliance:
+
+Ensure the platform complies with Russian regulations for ЦФА operations, including:
+KYC/AML requirements.
+Reporting for financial and tax authorities.
+Design architecture to accommodate future compliance updates.
+Security:
+
+Implement secure authentication (e.g., OAuth 2.0, JWT) and support multi-factor authentication (MFA).
+Encrypt sensitive data in transit and at rest.
+Use role-based access control (RBAC) to protect administrative features.
+5. Performance and Monitoring
+Performance Optimization:
+
+Use caching (e.g., Redis) for frequently accessed data like investment details and token metadata.
+Optimize database queries for high-volume transactions.
+Monitoring:
+
+Integrate monitoring tools (e.g., Prometheus, Grafana) to track system health and performance.
+Set up alerts for critical events, such as failed transactions or compliance breaches.
+6. Revenue Model
+Commissions:
+
+Commission on token sales (e.g., percentage of the investment amount).
+Fees for managing rental income and providing additional services to tenants.
+Secondary market commissions on token resale profits.
+Subscription Services:
+
+Offer premium analytics or portfolio management tools for investors.
+7. Future-Proofing
+Localization:
+Support Russian and English languages using a scalable localization framework.
+Third-Party Integrations:
+Prepare for future integration with investment applications or platforms like Тинькофф Инвестиции.
+Expandability:
+Allow for the addition of new asset classes and investment types without major architectural changes.
+Deliverables
+Create a scalable architecture diagram, including databases, APIs, and ЦФА modules.
+Provide boilerplate code for:
+Front-end (React.js with an example classifier and dashboard).
+Back-end (Node.js/Express or Python/Django with API endpoints for token management).
+Placeholders for ЦФА operator integrations.
+Ensure the system is designed for compliance, scalability, and future development.
