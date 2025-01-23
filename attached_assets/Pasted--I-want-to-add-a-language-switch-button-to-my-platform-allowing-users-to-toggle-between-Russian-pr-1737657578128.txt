@@ -1,0 +1,62 @@
+"I want to add a language switch button to my platform, allowing users to toggle between Russian (primary language) and English. Here are the requirements:
+
+1. Language Switch Button
+Button Placement:
+
+Place the language switch button in a prominent and intuitive location, such as:
+The top-right corner of the page.
+In the settings menu.
+Functionality:
+
+Default language: Russian.
+When clicked, the button should toggle the language between Russian and English.
+Save the user's selected language preference (e.g., in localStorage, cookies, or session storage), so the platform remembers the choice on the next visit.
+2. Language Data Management
+Centralized Translation Files:
+
+Create two JSON files for translations:
+ru.json for Russian.
+en.json for English.
+Example content:
+json
+Копировать
+Редактировать
+// ru.json
+{
+  "welcome_message": "Добро пожаловать!",
+  "login": "Войти",
+  "signup": "Регистрация"
+}
+
+// en.json
+{
+  "welcome_message": "Welcome!",
+  "login": "Login",
+  "signup": "Sign Up"
+}
+Dynamic Language Loading:
+
+Load the appropriate language file based on the selected language.
+Replace all text across the platform dynamically without refreshing the page.
+3. Technical Implementation
+Frontend Changes:
+
+Use a state management approach (e.g., React Context API or Redux) to handle the selected language globally across the application.
+Wrap the app or relevant components in a localization provider to ensure all text uses the selected language dynamically.
+Backend Adjustments (if applicable):
+
+If the platform serves content dynamically from the backend, include support for language-based responses.
+4. Visual and UX Considerations
+Button Design:
+
+Use a simple toggle design (e.g., a button with "RU | EN" text).
+Alternatively, display flags (🇷🇺 for Russian, 🇬🇧 for English) for a visual cue.
+Seamless Transition:
+
+Ensure switching the language updates text in real time without requiring a page reload.
+5. Deliverables
+A fully functional language switch button.
+JSON files for both Russian and English translations.
+Integration of the language toggle across the platform, ensuring all text changes dynamically.
+User-selected language preference stored and remembered across sessions.
+Please generate the necessary code for the frontend and provide placeholders for translation files in both languages."

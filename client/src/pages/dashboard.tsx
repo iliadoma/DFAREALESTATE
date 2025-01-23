@@ -22,6 +22,8 @@ import InvestmentCard from "@/components/investment-card";
 import InvestmentFilter from "@/components/investment-filter";
 import PortfolioChart from "@/components/portfolio-chart";
 import { Trophy, Star, Building2, Store, LineChart, LogOut, Wallet } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
+import LanguageSwitcher from "@/components/language-switcher";
 
 type FilterState = {
   type?: "real_estate" | "business";
@@ -31,6 +33,7 @@ type FilterState = {
 };
 
 export default function Dashboard() {
+  const { t } = useI18n();
   const [, setLocation] = useLocation();
   const { user, logout } = useUser();
   const { investments, portfolio, isLoading } = useInvestments();
@@ -44,11 +47,11 @@ export default function Dashboard() {
 
   // Calculate portfolio statistics
   const stats = useMemo(() => {
-    const realEstateInvestments = portfolio?.filter(t => 
+    const realEstateInvestments = portfolio?.filter(t =>
       investments?.find(i => i.id === t.investmentId)?.type === 'real_estate'
     ) || [];
 
-    const businessInvestments = portfolio?.filter(t => 
+    const businessInvestments = portfolio?.filter(t =>
       investments?.find(i => i.investmentId === t.id)?.type === 'business'
     ) || [];
 
@@ -109,11 +112,12 @@ export default function Dashboard() {
               <Star className="h-6 w-6 text-yellow-500" />
             </div>
             <span className="text-sm text-muted-foreground">
-              Welcome, {user?.username}
+              {t("common.welcome")}, {user?.username}
             </span>
+            <LanguageSwitcher />
             <Button variant="outline" size="sm" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              {t("common.logout")}
             </Button>
           </div>
         </div>
@@ -124,7 +128,7 @@ export default function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Real Estate Value
+                {t("dashboard.portfolio.realEstateValue")}
               </CardTitle>
               <Building2 className="h-4 w-4 text-blue-500" />
             </CardHeader>
@@ -133,7 +137,7 @@ export default function Dashboard() {
                 ${stats.realEstate.value.toFixed(2)}
               </div>
               <p className="text-xs text-muted-foreground">
-                {stats.realEstate.count} properties
+                {stats.realEstate.count} {t("dashboard.portfolio.properties")}
               </p>
             </CardContent>
           </Card>
@@ -141,7 +145,7 @@ export default function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Business Value
+                {t("dashboard.portfolio.businessValue")}
               </CardTitle>
               <Store className="h-4 w-4 text-green-500" />
             </CardHeader>
@@ -150,7 +154,7 @@ export default function Dashboard() {
                 ${stats.business.value.toFixed(2)}
               </div>
               <p className="text-xs text-muted-foreground">
-                {stats.business.count} businesses
+                {stats.business.count} {t("dashboard.portfolio.businesses")}
               </p>
             </CardContent>
           </Card>
@@ -158,15 +162,12 @@ export default function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Achievements
+                {t("dashboard.portfolio.achievements")}
               </CardTitle>
               <Trophy className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {/* TODO: Add actual achievements count */}
-                3
-              </div>
+              <div className="text-2xl font-bold">3</div>
               <div className="text-xs text-muted-foreground">
                 Latest: First Investment
               </div>
@@ -176,7 +177,7 @@ export default function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Performance
+                {t("dashboard.portfolio.performance")}
               </CardTitle>
               <LineChart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -188,9 +189,9 @@ export default function Dashboard() {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Investment Opportunities</CardTitle>
+            <CardTitle>{t("dashboard.investments.title")}</CardTitle>
             <CardDescription>
-              Browse and invest in available opportunities
+              {t("dashboard.investments.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
