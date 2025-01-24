@@ -21,14 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/lib/i18n/context";
+import { Lock } from "lucide-react";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -43,7 +38,6 @@ export default function AuthPage() {
   const { toast } = useToast();
   const { t } = useI18n();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isAdminLogin, setIsAdminLogin] = useState(false);
 
   // If already authenticated, redirect to appropriate dashboard
   useEffect(() => {
@@ -91,131 +85,123 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-6">
-          <CardTitle>{t("auth.loginTitle")}</CardTitle>
-          <CardDescription>{t("auth.loginDescription")}</CardDescription>
-
-          {/* Admin/User Toggle */}
-          <div className="flex gap-2 justify-center pt-4">
-            <Button
-              variant={!isAdminLogin ? "default" : "outline"}
-              size="sm"
-              onClick={() => setIsAdminLogin(false)}
-            >
-              User Login
-            </Button>
-            <Button
-              variant={isAdminLogin ? "default" : "outline"}
-              size="sm"
-              onClick={() => setIsAdminLogin(true)}
-            >
-              Admin Login
-            </Button>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <Tabs defaultValue="login">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">
-                {isAdminLogin ? "Admin Login" : t("common.login")}
-              </TabsTrigger>
-              {!isAdminLogin && (
-                <TabsTrigger value="register">{t("common.register")}</TabsTrigger>
-              )}
-            </TabsList>
-
-            <TabsContent value="login">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit((data) => onSubmit(data, true))}
-                  className="space-y-4"
+      <div className="w-full max-w-md space-y-4">
+        {/* Admin Login Card */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle>Admin Login</CardTitle>
+                <CardDescription>Access admin control panel</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit((data) => onSubmit(data, true))}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Admin Username</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="admin" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Admin Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
                 >
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("common.username")}</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder={isAdminLogin ? "Admin username" : "Username"} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("common.password")}</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} placeholder={isAdminLogin ? "Admin password" : "Password"} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {isSubmitting ? "Loading..." : "Login to Admin Panel"}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+
+        {/* User Login/Register Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("auth.loginTitle")}</CardTitle>
+            <CardDescription>{t("auth.loginDescription")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit((data) => onSubmit(data, true))}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("common.username")}</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("common.password")}</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex gap-2">
                   <Button
                     type="submit"
-                    className="w-full"
+                    className="flex-1"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? t("common.loading") : (isAdminLogin ? "Admin Login" : t("common.login"))}
+                    {isSubmitting ? t("common.loading") : t("common.login")}
                   </Button>
-                </form>
-              </Form>
-            </TabsContent>
-
-            {!isAdminLogin && (
-              <TabsContent value="register">
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit((data) => onSubmit(data, false))}
-                    className="space-y-4"
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => form.handleSubmit((data) => onSubmit(data, false))()}
+                    disabled={isSubmitting}
                   >
-                    <FormField
-                      control={form.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("common.username")}</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("common.password")}</FormLabel>
-                          <FormControl>
-                            <Input type="password" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? t("common.loading") : t("common.register")}
-                    </Button>
-                  </form>
-                </Form>
-              </TabsContent>
-            )}
-          </Tabs>
-        </CardContent>
-      </Card>
+                    {t("common.register")}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
