@@ -27,19 +27,20 @@ function Router() {
     );
   }
 
-  // If user is not authenticated, only show public routes
+  // If user is not authenticated, show public routes
   if (!user) {
     return (
       <Switch>
         <Route path="/auth" component={AuthPage} />
-        <Route>
+        <Route path="/">
           <LandingPage />
         </Route>
+        <Route component={LandingPage} />
       </Switch>
     );
   }
 
-  // If user is an admin, show admin routes
+  // Admin routes - completely separate interface
   if (user.role === "admin") {
     return (
       <Switch>
@@ -48,21 +49,23 @@ function Router() {
         <Route path="/admin/investments" component={AdminInvestments} />
         <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route path="/admin" component={AdminDashboard} />
-        <Route>
+        {/* Redirect all other routes to admin dashboard */}
+        <Route path="*">
           <AdminDashboard />
         </Route>
       </Switch>
     );
   }
 
-  // If user is authenticated but not admin, show protected routes
+  // Investor routes
   return (
     <Switch>
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/investments/:id" component={InvestmentDetail} />
-      <Route>
+      <Route path="/">
         <Dashboard />
       </Route>
+      <Route component={Dashboard} />
     </Switch>
   );
 }
