@@ -28,6 +28,8 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/lib/i18n/context";
+import LanguageSwitcher from "@/components/language-switcher";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -40,6 +42,7 @@ export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { user, login, register, isLoading: isUserLoading } = useUser();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // If already authenticated, redirect to dashboard
@@ -71,8 +74,8 @@ export default function AuthPage() {
       console.error("Auth error:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error.message || "Authentication failed",
+        title: t("common.error"),
+        description: error.message || t("auth.failed"),
       });
     } finally {
       setIsSubmitting(false);
@@ -88,17 +91,22 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Welcome to TokenizedAssets</CardTitle>
-          <CardDescription>
-            Manage your digital asset investments
-          </CardDescription>
+        <CardHeader className="space-y-1">
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>metr.digital</CardTitle>
+              <CardDescription>
+                {t("auth.description")}
+              </CardDescription>
+            </div>
+            <LanguageSwitcher />
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="register">Register</TabsTrigger>
+              <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
+              <TabsTrigger value="register">{t("auth.register")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
@@ -112,7 +120,7 @@ export default function AuthPage() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>{t("auth.username")}</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -125,7 +133,7 @@ export default function AuthPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t("auth.password")}</FormLabel>
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
@@ -138,7 +146,7 @@ export default function AuthPage() {
                     className="w-full"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Loading..." : "Login"}
+                    {isSubmitting ? t("common.loading") : t("auth.login")}
                   </Button>
                 </form>
               </Form>
@@ -155,7 +163,7 @@ export default function AuthPage() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>{t("auth.username")}</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -168,7 +176,7 @@ export default function AuthPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t("auth.password")}</FormLabel>
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
@@ -181,7 +189,7 @@ export default function AuthPage() {
                     className="w-full"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Loading..." : "Register"}
+                    {isSubmitting ? t("common.loading") : t("auth.register")}
                   </Button>
                 </form>
               </Form>
