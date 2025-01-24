@@ -6,17 +6,34 @@ import { investments, tokens, distributions, insertInvestmentSchema } from "@db/
 import { eq, and } from "drizzle-orm";
 import path from "path";
 import express from "express";
+import multer from "multer";
+import { randomBytes } from "crypto";
 
-// Extend Express.User with our schema
-declare global {
-  namespace Express {
-    interface User {
-      id: number;
-      username: string;
-      role: "admin" | "investor";
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(process.cwd(), 'attached_assets'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = randomBytes(8).toString('hex');
+    cb(null, `${uniqueSuffix}-${file.originalname}`);
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only JPEG and PNG are allowed.'));
     }
   }
-}
+});
 
 // Middleware to check if user is admin
 const isAdmin = (req: Request, res: Response, next: NextFunction) => {
@@ -50,6 +67,16 @@ export function registerRoutes(app: Express): Server {
       }
     }
   }));
+
+  // File upload endpoint for investment images
+  app.post("/api/upload", isAdmin, upload.single('file'), (req, res) => {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded.');
+    }
+
+    const url = `/assets/${req.file.filename}`;
+    res.json({ url });
+  });
 
   // Investment routes
   app.get("/api/investments", async (_req, res) => {
