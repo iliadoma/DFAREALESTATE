@@ -91,13 +91,13 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
 
       <div className="grid gap-6 md:grid-cols-3">
         <div className="space-y-2">
-          <Label>{t("investment.category")}</Label>
+          <Label>{t("dashboard.investments.filters.category")}</Label>
           <Select
             value={category}
             onValueChange={handleCategoryChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder={t("investment.allCategories")} />
+              <SelectValue placeholder={t("dashboard.investments.filters.allCategories")} />
             </SelectTrigger>
             <SelectContent>
               {type &&
@@ -115,7 +115,7 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
 
         <div className="space-y-4">
           <div className="flex justify-between">
-            <Label>{t("investment.minRoi")}</Label>
+            <Label>{t("dashboard.investments.filters.minRoi")}</Label>
             <span className="text-sm text-muted-foreground">{minRoi}%</span>
           </div>
           <Slider
@@ -128,7 +128,7 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
 
         <div className="space-y-4">
           <div className="flex justify-between">
-            <Label>{t("investment.maxInvestment")}</Label>
+            <Label>{t("dashboard.investments.filters.maxInvestment")}</Label>
             <span className="text-sm text-muted-foreground">
               ₽{maxPrice.toLocaleString()}
             </span>

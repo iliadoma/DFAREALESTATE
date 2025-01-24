@@ -74,6 +74,10 @@ export const en = {
   },
   investment: {
     level: "Level",
+    category: "Category",
+    allCategories: "All Categories",
+    minRoi: "Minimum ROI",
+    maxInvestment: "Maximum Investment",
     types: {
       realEstate: "Real Estate",
       business: "Business",

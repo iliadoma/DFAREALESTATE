@@ -75,6 +75,10 @@ export const ru = {
   },
   investment: {
     level: "Уровень",
+    category: "Категория",
+    allCategories: "Все категории",
+    minRoi: "Минимальный ROI",
+    maxInvestment: "Максимальная инвестиция",
     types: {
       realEstate: "Недвижимость",
       business: "Бизнес",
@@ -128,7 +132,7 @@ export const ru = {
     investNow: "Инвестировать сейчас",
     purchaseTokens: {
       title: "Покупка токенов",
-      description: "Введите количество токенов для покупки",
+      description: "Введите количество токенов для покупки для {name}",
       numberOfTokens: "Количество токенов",
       enterAmount: "Введите количество",
       pricePerToken: "Цена за токен",
