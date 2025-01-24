@@ -5,7 +5,7 @@ import session from "express-session";
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { users, insertUserSchema } from "@db/schema";
+import { users, insertUserSchema, type User as SelectUser } from "@db/schema";
 import { db } from "@db";
 import { eq } from "drizzle-orm";
 
@@ -28,6 +28,13 @@ const crypto = {
     return timingSafeEqual(hashedPasswordBuf, suppliedPasswordBuf);
   },
 };
+
+// Extend Express User type with our schema
+declare global {
+  namespace Express {
+    interface User extends SelectUser {}
+  }
+}
 
 export function setupAuth(app: Express) {
   const MemoryStore = createMemoryStore(session);
@@ -93,14 +100,6 @@ export function setupAuth(app: Express) {
     }
   });
 
-  // Middleware to check if user is admin
-  const isAdmin = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
-    if (!req.isAuthenticated() || req.user?.role !== 'admin') {
-      return res.status(403).send("Access denied");
-    }
-    next();
-  };
-
   app.post("/api/register", async (req, res, next) => {
     try {
       const result = insertUserSchema.safeParse(req.body);
@@ -150,7 +149,12 @@ export function setupAuth(app: Express) {
   });
 
   // Admin-only registration endpoint
-  app.post("/api/admin/register", isAdmin, async (req, res, next) => {
+  app.post("/api/admin/register", async (req, res, next) => {
+    // Check if the current user is an admin
+    if (!req.isAuthenticated() || req.user?.role !== 'admin') {
+      return res.status(403).send("Access denied");
+    }
+
     try {
       const result = insertUserSchema.safeParse(req.body);
       if (!result.success) {
@@ -193,7 +197,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err: any, user: Express.User | false, info: { message: string } | undefined) => {
+    passport.authenticate("local", (err: any, user: Express.User, info: { message: string } | undefined) => {
       if (err) return next(err);
       if (!user) return res.status(400).send(info?.message || "Login failed");
 
