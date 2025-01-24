@@ -12,10 +12,12 @@ import InvestmentCard from "@/components/investment-card";
 import type { Investment } from "@db/schema";
 import { useI18n } from "@/lib/i18n/context";
 import LanguageSwitcher from "@/components/language-switcher";
+import { useUser } from "@/hooks/use-user";
 
 export default function LandingPage() {
   const [, setLocation] = useLocation();
   const { t } = useI18n();
+  const { user } = useUser();
 
   const { data: investments } = useQuery<Investment[]>({
     queryKey: ['/api/investments'],
@@ -140,8 +142,22 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          {t("landing.footer")} © 2024 metr.digital.
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              {t("landing.footer")} © 2024 metr.digital.
+            </p>
+            {user?.role === "admin" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-muted-foreground hover:text-foreground"
+                onClick={() => setLocation("/admin")}
+              >
+                Admin Panel
+              </Button>
+            )}
+          </div>
         </div>
       </footer>
     </div>
