@@ -1,0 +1,74 @@
+Prompt for Replit AI:
+
+"I am having trouble implementing role-based login functionality in my system. I need two separate login paths: one for investors (clients) and one for administrators. Here's how the system should work:
+
+1. Login Roles
+Investor Login:
+
+Investors log in to access the client interface, where they can:
+Browse available real estate and business investment opportunities.
+View detailed information about each investment.
+Make investments in available opportunities.
+Track their portfolio and earnings.
+Administrator Login:
+
+Administrators log in to access a completely separate admin interface, where they can:
+Add new investment opportunities (real estate or businesses).
+Edit existing opportunities (update descriptions, upload new photos, or modify financial information).
+Delete or deactivate investment cards that are no longer relevant.
+Manage system-wide settings related to investments.
+2. Key Differences Between Interfaces
+Investor Interface:
+
+Focus on viewing, exploring, and managing personal investments.
+No options for adding, editing, or deleting investment cards.
+Include features like filters, sorting, and detailed investment views.
+Administrator Interface:
+
+Focus entirely on investment management:
+Add/Edit/Delete investment opportunities.
+Upload photos, documents, and files for investment cards.
+Manage categories or classifications (e.g., Core Plus, Value-Add).
+Administrators should not see or interact with the investment actions (e.g., "Invest Now").
+3. Technical Requirements
+Role-Based Authentication:
+
+During login, determine the user’s role (investor or admin) based on the credentials.
+Redirect users to the appropriate interface based on their role:
+Investors → Investor Dashboard.
+Administrators → Admin Dashboard.
+Role-Specific Routes:
+
+Separate routes for each role:
+/investor for investor features.
+/admin for admin features.
+Ensure that unauthorized users cannot access the admin interface by directly navigating to /admin.
+Database/User Management:
+
+Include a role field in the user database:
+Example: { username: "admin", password: "hashed_password", role: "admin" }.
+Use this field to determine which interface the user should see after login.
+Backend Logic:
+
+Create two distinct sets of APIs:
+Investor APIs: Fetch available investments, track portfolio, manage investments.
+Admin APIs: Add, edit, delete, and manage investment data.
+Frontend Implementation:
+
+Build separate UI components for investors and administrators:
+Investor components should focus on exploring and investing.
+Admin components should include forms and tools for managing investment cards.
+4. Fixing the Current Problem
+Currently, both investors and administrators see the same interface, which is incorrect. Please implement the following steps to fix this:
+
+Ensure the admin role is properly identified during login.
+Redirect administrators to a completely separate admin interface.
+Restrict admin-specific features (e.g., "Add Investment") to the admin interface only.
+Prevent investors from accessing admin routes or tools, even if they attempt to navigate there manually.
+5. Deliverables
+Fully functioning login system that correctly redirects users based on their role.
+Separate and distinct interfaces for investors and administrators.
+Role-based access control to ensure secure separation of functionality.
+Clear documentation of how the roles are implemented and managed.
+Please carefully implement these changes, ensuring that investors and administrators have completely separate interfaces and functionalities."
+

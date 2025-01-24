@@ -12,6 +12,7 @@ import Dashboard from "@/pages/dashboard";
 import InvestmentDetail from "@/pages/investment-detail";
 import AdminDashboard from "@/pages/admin/dashboard";
 import AdminInvestments from "@/pages/admin/investments";
+import NewInvestment from "@/pages/admin/investments/new";
 import EditInvestment from "@/pages/admin/investments/[id]";
 
 function Router() {
@@ -42,9 +43,10 @@ function Router() {
   if (user.role === "admin") {
     return (
       <Switch>
-        <Route path="/admin/investments/new" component={EditInvestment} />
+        <Route path="/admin/investments/new" component={NewInvestment} />
         <Route path="/admin/investments/:id" component={EditInvestment} />
         <Route path="/admin/investments" component={AdminInvestments} />
+        <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route path="/admin" component={AdminDashboard} />
         <Route>
           <AdminDashboard />
