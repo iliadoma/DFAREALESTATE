@@ -11,14 +11,10 @@ import { Slider } from "@/components/ui/slider";
 import {
   Building2,
   Store,
-  DoorClosed,
+  TrendingUp,
   Building,
-  Warehouse,
-  Dumbbell,
-  Coffee,
-  Home,
-  ShoppingBag,
-  Users
+  LineChart,
+  BarChart3,
 } from "lucide-react";
 import {
   Tabs,
@@ -26,6 +22,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { useI18n } from "@/lib/i18n/context";
 
 type FilterProps = {
   onFilterChange: (filters: {
@@ -39,32 +36,27 @@ type FilterProps = {
 
 const categories = {
   real_estate: [
-    { value: "standalone_building", label: "Standalone Building", icon: Building2 },
-    { value: "ground_floor_commercial", label: "Ground Floor Commercial", icon: DoorClosed },
-    { value: "mixed_use", label: "Mixed Use", icon: Building },
-    { value: "office_space", label: "Office Space", icon: Building2 },
-    { value: "warehouse", label: "Warehouse", icon: Warehouse }
+    { value: "new_conservative", label: "Новая консервативная недвижимость", icon: Building2 },
+    { value: "core_plus", label: "Core Plus недвижимость", icon: Building },
+    { value: "value_add", label: "Уникальная недвижимость с добавленной стоимостью", icon: TrendingUp }
   ],
   business: [
-    { value: "yoga_studio", label: "Yoga Studio", icon: Users },
-    { value: "restaurant", label: "Restaurant", icon: Store },
-    { value: "fitness_center", label: "Fitness Center", icon: Dumbbell },
-    { value: "coffee_shop", label: "Coffee Shop", icon: Coffee },
-    { value: "retail_store", label: "Retail Store", icon: ShoppingBag },
-    { value: "coworking_space", label: "Co-working Space", icon: Users }
+    { value: "systematic", label: "Системные бизнесы", icon: BarChart3 }
   ]
 };
 
 export default function InvestmentFilter({ onFilterChange, className }: FilterProps) {
-  const [type, setType] = useState<"real_estate" | "business" | undefined>();
+  const { t } = useI18n();
+  const [type, setType] = useState<"real_estate" | "business">("real_estate");
   const [category, setCategory] = useState<string>();
   const [minRoi, setMinRoi] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(100000);
 
-  const handleTypeChange = (value: "real_estate" | "business") => {
-    setType(value);
+  const handleTypeChange = (value: string) => {
+    const newType = value as "real_estate" | "business";
+    setType(newType);
     setCategory(undefined); // Reset category when type changes
-    onFilterChange({ type: value, minRoi, maxPrice });
+    onFilterChange({ type: newType, minRoi, maxPrice });
   };
 
   const handleCategoryChange = (value: string) => {
@@ -84,28 +76,28 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <Tabs defaultValue={type || "real_estate"} onValueChange={(v: "real_estate" | "business") => handleTypeChange(v)}>
+      <Tabs defaultValue={type} onValueChange={handleTypeChange}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="real_estate" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
-            Real Estate
+            {t("investment.types.realEstate")}
           </TabsTrigger>
           <TabsTrigger value="business" className="flex items-center gap-2">
             <Store className="h-4 w-4" />
-            Lifestyle Business
+            {t("investment.types.business")}
           </TabsTrigger>
         </TabsList>
       </Tabs>
 
       <div className="grid gap-6 md:grid-cols-3">
         <div className="space-y-2">
-          <Label>Category</Label>
+          <Label>{t("investment.category")}</Label>
           <Select
             value={category}
             onValueChange={handleCategoryChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder="All Categories" />
+              <SelectValue placeholder={t("investment.allCategories")} />
             </SelectTrigger>
             <SelectContent>
               {type &&
@@ -123,7 +115,7 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
 
         <div className="space-y-4">
           <div className="flex justify-between">
-            <Label>Minimum ROI</Label>
+            <Label>{t("investment.minRoi")}</Label>
             <span className="text-sm text-muted-foreground">{minRoi}%</span>
           </div>
           <Slider
@@ -136,9 +128,9 @@ export default function InvestmentFilter({ onFilterChange, className }: FilterPr
 
         <div className="space-y-4">
           <div className="flex justify-between">
-            <Label>Max Investment</Label>
+            <Label>{t("investment.maxInvestment")}</Label>
             <span className="text-sm text-muted-foreground">
-              ${maxPrice.toLocaleString()}
+              ₽{maxPrice.toLocaleString()}
             </span>
           </div>
           <Slider
