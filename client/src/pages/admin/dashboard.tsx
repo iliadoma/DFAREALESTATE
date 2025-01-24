@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useUser } from "@/hooks/use-user";
-import { Plus, Settings, Package, FileText, UserPlus } from "lucide-react";
+import { Plus, Settings, Package, FileText, UserPlus, LayoutDashboard, ImagePlus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -99,29 +99,54 @@ export default function AdminDashboard() {
 
   const adminMenuItems = [
     {
-      title: t("admin.investments.addNew"),
-      description: t("admin.investments.addDescription"),
-      icon: Plus,
-      href: "/admin/investments/new",
-    },
-    {
-      title: t("admin.investments.manage"),
-      description: t("admin.investments.manageDescription"),
+      title: "Investment Management",
+      description: "Add, edit, or remove investment opportunities",
       icon: Package,
       href: "/admin/investments",
+      actions: [
+        {
+          label: "Add New Investment",
+          icon: Plus,
+          href: "/admin/investments/new"
+        },
+        {
+          label: "Manage Investments",
+          icon: LayoutDashboard,
+          href: "/admin/investments"
+        }
+      ]
     },
     {
-      title: t("admin.files.title"),
-      description: t("admin.files.description"),
-      icon: FileText,
-      href: "/admin/files",
+      title: "Asset Management",
+      description: "Upload and manage photos and documents",
+      icon: ImagePlus,
+      href: "/admin/assets",
+      actions: [
+        {
+          label: "Upload Images",
+          icon: ImagePlus,
+          href: "/admin/assets/upload"
+        },
+        {
+          label: "Manage Assets",
+          icon: FileText,
+          href: "/admin/assets"
+        }
+      ]
     },
     {
-      title: t("admin.settings.title"),
-      description: t("admin.settings.description"),
+      title: "System Settings",
+      description: "Configure platform settings and preferences",
       icon: Settings,
       href: "/admin/settings",
-    },
+      actions: [
+        {
+          label: "General Settings",
+          icon: Settings,
+          href: "/admin/settings"
+        }
+      ]
+    }
   ];
 
   return (
@@ -184,20 +209,30 @@ export default function AdminDashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {adminMenuItems.map((item) => (
-            <Card
-              key={item.href}
-              className="hover:bg-accent cursor-pointer transition-colors"
-              onClick={() => setLocation(item.href)}
-            >
+        <div className="grid gap-6">
+          {adminMenuItems.map((section) => (
+            <Card key={section.href} className="relative overflow-hidden">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <item.icon className="h-5 w-5" />
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
+                  <section.icon className="h-5 w-5" />
+                  <CardTitle className="text-xl">{section.title}</CardTitle>
                 </div>
-                <CardDescription>{item.description}</CardDescription>
+                <CardDescription>{section.description}</CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-3">
+                  {section.actions.map((action) => (
+                    <Button
+                      key={action.href}
+                      onClick={() => setLocation(action.href)}
+                      className="flex items-center gap-2"
+                    >
+                      <action.icon className="h-4 w-4" />
+                      {action.label}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
             </Card>
           ))}
         </div>
