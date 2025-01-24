@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/lib/i18n/context";
-import { Lock } from "lucide-react";
+import { Lock, Plus } from "lucide-react";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -79,7 +79,37 @@ export default function AuthPage() {
   };
 
   // Show loading state
-  if (user) return null;
+  if (user) {
+    if (user.role === 'admin') {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-background p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>Admin Actions</CardTitle>
+              <CardDescription>Choose an action to proceed</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button 
+                className="w-full" 
+                onClick={() => setLocation("/admin/investments/new")}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Investment
+              </Button>
+              <Button 
+                className="w-full" 
+                variant="outline" 
+                onClick={() => setLocation("/admin/dashboard")}
+              >
+                Go to Dashboard
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+    return null;
+  }
 
   if (isAdminLogin) {
     return (
