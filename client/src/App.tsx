@@ -42,10 +42,10 @@ function Router() {
   if (user.role === "admin") {
     return (
       <Switch>
-        <Route path="/admin" component={AdminDashboard} />
         <Route path="/admin/investments/new" component={EditInvestment} />
         <Route path="/admin/investments/:id" component={EditInvestment} />
         <Route path="/admin/investments" component={AdminInvestments} />
+        <Route path="/admin" component={AdminDashboard} />
         <Route>
           <AdminDashboard />
         </Route>
