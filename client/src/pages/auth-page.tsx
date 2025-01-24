@@ -33,18 +33,19 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function AuthPage() {
-  const [location, setLocation] = useLocation();
+  const [location] = useLocation();
   const isAdminLogin = location.includes("mode=admin");
   const { user, login } = useUser();
   const { toast } = useToast();
   const { t } = useI18n();
+  const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // If already authenticated, redirect to appropriate dashboard
   useEffect(() => {
     if (user) {
       if (user.role === 'admin') {
-        setLocation("/admin");
+        setLocation("/admin/dashboard");
       } else {
         setLocation("/dashboard");
       }
