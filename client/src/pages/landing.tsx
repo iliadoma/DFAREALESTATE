@@ -13,6 +13,7 @@ import type { Investment } from "@db/schema";
 import { useI18n } from "@/lib/i18n/context";
 import LanguageSwitcher from "@/components/language-switcher";
 import { useUser } from "@/hooks/use-user";
+import { Lock } from "lucide-react";
 
 export default function LandingPage() {
   const [, setLocation] = useLocation();
@@ -32,6 +33,15 @@ export default function LandingPage() {
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">metr.digital</h1>
           <div className="flex items-center gap-4">
+            <Button 
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+              onClick={() => setLocation("/auth")}
+            >
+              <Lock className="h-4 w-4" />
+              Admin Login
+            </Button>
             <LanguageSwitcher />
             <Button onClick={() => setLocation("/auth")}>{t("common.login")}</Button>
           </div>
@@ -147,16 +157,6 @@ export default function LandingPage() {
             <p className="text-sm text-muted-foreground">
               {t("landing.footer")} © 2024 metr.digital.
             </p>
-            {user?.role === "admin" && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs text-muted-foreground hover:text-foreground"
-                onClick={() => setLocation("/admin")}
-              >
-                Admin Panel
-              </Button>
-            )}
           </div>
         </div>
       </footer>
