@@ -33,15 +33,6 @@ export default function LandingPage() {
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">metr.digital</h1>
           <div className="flex items-center gap-4">
-            <Button 
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-              onClick={() => setLocation("/auth")}
-            >
-              <Lock className="h-4 w-4" />
-              Admin Login
-            </Button>
             <LanguageSwitcher />
             <Button onClick={() => setLocation("/auth")}>{t("common.login")}</Button>
           </div>
@@ -157,6 +148,17 @@ export default function LandingPage() {
             <p className="text-sm text-muted-foreground">
               {t("landing.footer")} © 2024 metr.digital.
             </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                onClick={() => setLocation("/auth?mode=admin")}
+              >
+                <Lock className="h-4 w-4" />
+                Admin Login
+              </Button>
+            </div>
           </div>
         </div>
       </footer>
