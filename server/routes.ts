@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { db } from "@db";
@@ -7,8 +7,19 @@ import { eq, and } from "drizzle-orm";
 import path from "path";
 import express from "express";
 
+// Extend Express.User with our schema
+declare global {
+  namespace Express {
+    interface User {
+      id: number;
+      username: string;
+      role: "admin" | "investor";
+    }
+  }
+}
+
 // Middleware to check if user is admin
-const isAdmin = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.isAuthenticated() || req.user?.role !== 'admin') {
     return res.status(403).send("Access denied");
   }
