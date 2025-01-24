@@ -10,13 +10,19 @@ export const ru = {
     cancel: "Отмена",
     loading: "Загрузка...",
     back: "Назад",
+    error: "Ошибка",
   },
   auth: {
     loginTitle: "Добро пожаловать в metr.digital",
-    loginDescription: "Управляйте вашими цифровыми инвестициями",
+    description: "Управляйте вашими цифровыми инвестициями",
     registerSuccess: "Регистрация успешна",
     loginSuccess: "Вход выполнен успешно",
     logoutSuccess: "Выход выполнен успешно",
+    failed: "Ошибка аутентификации",
+    username: "Имя пользователя",
+    password: "Пароль",
+    login: "Войти",
+    register: "Регистрация",
   },
   landing: {
     hero: {

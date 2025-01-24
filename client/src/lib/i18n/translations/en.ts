@@ -10,13 +10,19 @@ export const en = {
     cancel: "Cancel",
     loading: "Loading...",
     back: "Back",
+    error: "Error",
   },
   auth: {
-    loginTitle: "Welcome to TokenizedAssets",
-    loginDescription: "Manage your digital asset investments",
+    loginTitle: "Welcome to metr.digital",
+    description: "Manage your digital asset investments",
     registerSuccess: "Successfully registered",
     loginSuccess: "Successfully logged in",
     logoutSuccess: "Successfully logged out",
+    failed: "Authentication failed",
+    username: "Username",
+    password: "Password",
+    login: "Login",
+    register: "Register",
   },
   landing: {
     hero: {
