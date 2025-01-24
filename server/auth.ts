@@ -31,7 +31,7 @@ const crypto = {
 
 export function setupAuth(app: Express) {
   const MemoryStore = createMemoryStore(session);
-  
+
   const sessionSettings: session.SessionOptions = {
     secret: process.env.REPL_ID || "token-platform-secret",
     resave: false,
@@ -63,12 +63,12 @@ export function setupAuth(app: Express) {
         if (!user) {
           return done(null, false, { message: "Incorrect username." });
         }
-        
+
         const isMatch = await crypto.compare(password, user.password);
         if (!isMatch) {
           return done(null, false, { message: "Incorrect password." });
         }
-        
+
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -93,6 +93,14 @@ export function setupAuth(app: Express) {
     }
   });
 
+  // Middleware to check if user is admin
+  const isAdmin = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+    if (!req.isAuthenticated() || req.user?.role !== 'admin') {
+      return res.status(403).send("Access denied");
+    }
+    next();
+  };
+
   app.post("/api/register", async (req, res, next) => {
     try {
       const result = insertUserSchema.safeParse(req.body);
@@ -104,6 +112,56 @@ export function setupAuth(app: Express) {
 
       const { username, password } = result.data;
 
+      // Check if user already exists
+      const [existingUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, username))
+        .limit(1);
+
+      if (existingUser) {
+        return res.status(400).send("Username already exists");
+      }
+
+      const hashedPassword = await crypto.hash(password);
+
+      // Only set role to admin if the request is made by an existing admin
+      const role = req.isAuthenticated() && req.user?.role === 'admin' ? 'admin' : 'investor';
+
+      const [newUser] = await db
+        .insert(users)
+        .values({
+          username,
+          password: hashedPassword,
+          role
+        })
+        .returning();
+
+      req.login(newUser, (err) => {
+        if (err) return next(err);
+        return res.json({
+          message: "Registration successful",
+          user: { id: newUser.id, username: newUser.username, role: newUser.role }
+        });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // Admin-only registration endpoint
+  app.post("/api/admin/register", isAdmin, async (req, res, next) => {
+    try {
+      const result = insertUserSchema.safeParse(req.body);
+      if (!result.success) {
+        return res
+          .status(400)
+          .send("Invalid input: " + result.error.issues.map(i => i.message).join(", "));
+      }
+
+      const { username, password } = result.data;
+
+      // Check if user already exists
       const [existingUser] = await db
         .select()
         .from(users)
@@ -121,16 +179,13 @@ export function setupAuth(app: Express) {
         .values({
           username,
           password: hashedPassword,
-          role: "investor"
+          role: 'admin'
         })
         .returning();
 
-      req.login(newUser, (err) => {
-        if (err) return next(err);
-        return res.json({
-          message: "Registration successful",
-          user: { id: newUser.id, username: newUser.username, role: newUser.role }
-        });
+      res.json({
+        message: "Admin registration successful",
+        user: { id: newUser.id, username: newUser.username, role: newUser.role }
       });
     } catch (error) {
       next(error);
@@ -138,7 +193,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: any, user: Express.User | false, info: { message: string } | undefined) => {
       if (err) return next(err);
       if (!user) return res.status(400).send(info?.message || "Login failed");
 

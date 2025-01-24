@@ -35,7 +35,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function AuthPage() {
   const [location, setLocation] = useLocation();
   const isAdminLogin = location.includes("mode=admin");
-  const { user, login, register, isLoading: isUserLoading } = useUser();
+  const { user, login } = useUser();
   const { toast } = useToast();
   const { t } = useI18n();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,9 +78,6 @@ export default function AuthPage() {
   };
 
   // Show loading state
-  if (isUserLoading) return null;
-
-  // Redirect if already logged in
   if (user) return null;
 
   if (isAdminLogin) {
@@ -128,15 +125,13 @@ export default function AuthPage() {
                     </FormItem>
                   )}
                 />
-                <div className="flex gap-2">
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Loading..." : "Login to Admin Panel"}
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Loading..." : "Login to Admin Panel"}
+                </Button>
               </form>
             </Form>
           </CardContent>
@@ -196,7 +191,31 @@ export default function AuthPage() {
                   type="button"
                   variant="outline"
                   className="flex-1"
-                  onClick={() => form.handleSubmit((data) => register(data).then(() => login(data)))()}
+                  onClick={async () => {
+                    const data = form.getValues();
+                    try {
+                      const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                        credentials: 'include',
+                      });
+
+                      if (!response.ok) {
+                        throw new Error(await response.text());
+                      }
+
+                      await login(data);
+                    } catch (error: any) {
+                      toast({
+                        variant: "destructive",
+                        title: "Error",
+                        description: error.message || "Registration failed",
+                      });
+                    }
+                  }}
                   disabled={isSubmitting}
                 >
                   {t("common.register")}
