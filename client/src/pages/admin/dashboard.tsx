@@ -27,26 +27,26 @@ export default function AdminDashboard() {
 
   const adminMenuItems = [
     {
-      title: "Add Investment",
-      description: "Create a new investment opportunity",
+      title: t("admin.investments.addNew"),
+      description: t("admin.investments.addDescription"),
       icon: Plus,
       href: "/admin/investments/new",
     },
     {
-      title: "Manage Investments",
-      description: "Edit or update existing investments",
+      title: t("admin.investments.manage"),
+      description: t("admin.investments.manageDescription"),
       icon: Package,
       href: "/admin/investments",
     },
     {
-      title: "File Manager",
-      description: "Manage uploaded files and documents",
+      title: t("admin.files.title"),
+      description: t("admin.files.description"),
       icon: FileText,
       href: "/admin/files",
     },
     {
-      title: "Settings",
-      description: "Configure admin panel settings",
+      title: t("admin.settings.title"),
+      description: t("admin.settings.description"),
       icon: Settings,
       href: "/admin/settings",
     },
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold">{t("admin.navigation.dashboard")}</h1>
           </div>
         </div>
       </header>

@@ -7,6 +7,14 @@ import { eq, and } from "drizzle-orm";
 import path from "path";
 import express from "express";
 
+// Middleware to check if user is admin
+const isAdmin = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+  if (!req.isAuthenticated() || req.user?.role !== 'admin') {
+    return res.status(403).send("Access denied");
+  }
+  next();
+};
+
 export function registerRoutes(app: Express): Server {
   // Set up authentication routes and middleware
   setupAuth(app);
@@ -59,6 +67,68 @@ export function registerRoutes(app: Express): Server {
       res.json(investment);
     } catch (error) {
       res.status(500).send("Error fetching investment");
+    }
+  });
+
+  // Admin only routes
+  app.post("/api/investments", isAdmin, async (req, res) => {
+    try {
+      const result = insertInvestmentSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).send("Invalid input: " + result.error.issues.map(i => i.message).join(", "));
+      }
+
+      const [investment] = await db
+        .insert(investments)
+        .values(result.data)
+        .returning();
+
+      res.json(investment);
+    } catch (error) {
+      console.error("Investment creation error:", error);
+      res.status(500).send("Error creating investment");
+    }
+  });
+
+  app.put("/api/investments/:id", isAdmin, async (req, res) => {
+    try {
+      const result = insertInvestmentSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).send("Invalid input: " + result.error.issues.map(i => i.message).join(", "));
+      }
+
+      const [investment] = await db
+        .update(investments)
+        .set(result.data)
+        .where(eq(investments.id, parseInt(req.params.id)))
+        .returning();
+
+      if (!investment) {
+        return res.status(404).send("Investment not found");
+      }
+
+      res.json(investment);
+    } catch (error) {
+      console.error("Investment update error:", error);
+      res.status(500).send("Error updating investment");
+    }
+  });
+
+  app.delete("/api/investments/:id", isAdmin, async (req, res) => {
+    try {
+      const [investment] = await db
+        .delete(investments)
+        .where(eq(investments.id, parseInt(req.params.id)))
+        .returning();
+
+      if (!investment) {
+        return res.status(404).send("Investment not found");
+      }
+
+      res.json({ message: "Investment deleted successfully" });
+    } catch (error) {
+      console.error("Investment deletion error:", error);
+      res.status(500).send("Error deleting investment");
     }
   });
 
