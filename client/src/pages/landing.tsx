@@ -12,13 +12,10 @@ import InvestmentCard from "@/components/investment-card";
 import type { Investment } from "@db/schema";
 import { useI18n } from "@/lib/i18n/context";
 import LanguageSwitcher from "@/components/language-switcher";
-import { useUser } from "@/hooks/use-user";
-import { Lock } from "lucide-react";
 
 export default function LandingPage() {
   const [, setLocation] = useLocation();
   const { t } = useI18n();
-  const { user } = useUser();
 
   const { data: investments } = useQuery<Investment[]>({
     queryKey: ['/api/investments'],
@@ -143,23 +140,8 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              {t("landing.footer")} © 2024 metr.digital.
-            </p>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                onClick={() => setLocation("/auth?mode=admin")}
-              >
-                <Lock className="h-4 w-4" />
-                Admin Login
-              </Button>
-            </div>
-          </div>
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          {t("landing.footer")} © 2024 metr.digital.
         </div>
       </footer>
     </div>

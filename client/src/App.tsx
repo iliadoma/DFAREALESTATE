@@ -10,10 +10,6 @@ import LandingPage from "@/pages/landing";
 import AuthPage from "@/pages/auth-page";
 import Dashboard from "@/pages/dashboard";
 import InvestmentDetail from "@/pages/investment-detail";
-import AdminDashboard from "@/pages/admin/dashboard";
-import AdminInvestments from "@/pages/admin/investments";
-import NewInvestment from "@/pages/admin/investments/new";
-import EditInvestment from "@/pages/admin/investments/[id]";
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -27,45 +23,26 @@ function Router() {
     );
   }
 
-  // If user is not authenticated, show public routes
+  // If user is not authenticated, only show public routes
   if (!user) {
     return (
       <Switch>
         <Route path="/auth" component={AuthPage} />
-        <Route path="/">
+        <Route>
           <LandingPage />
         </Route>
-        <Route component={LandingPage} />
       </Switch>
     );
   }
 
-  // Admin routes - completely separate interface
-  if (user.role === "admin") {
-    return (
-      <Switch>
-        <Route path="/admin/investments/new" component={NewInvestment} />
-        <Route path="/admin/investments/:id" component={EditInvestment} />
-        <Route path="/admin/investments" component={AdminInvestments} />
-        <Route path="/admin/dashboard" component={AdminDashboard} />
-        <Route path="/admin" component={AdminDashboard} />
-        {/* Redirect all other routes to admin dashboard */}
-        <Route path="*">
-          <AdminDashboard />
-        </Route>
-      </Switch>
-    );
-  }
-
-  // Investor routes
+  // If user is authenticated, only show protected routes
   return (
     <Switch>
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/investments/:id" component={InvestmentDetail} />
-      <Route path="/">
+      <Route>
         <Dashboard />
       </Route>
-      <Route component={Dashboard} />
     </Switch>
   );
 }

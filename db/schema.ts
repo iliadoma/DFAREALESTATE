@@ -21,11 +21,18 @@ export const investments = pgTable("investments", {
   category: text("category", { 
     enum: [
       // Real Estate Categories
-      "new_conservative", 
-      "core_plus",       
-      "value_add",       
+      "standalone_building",
+      "ground_floor_commercial",
+      "mixed_use",
+      "office_space",
+      "warehouse",
       // Business Categories
-      "systematic"       
+      "yoga_studio",
+      "restaurant",
+      "fitness_center",
+      "coffee_shop",
+      "retail_store",
+      "coworking_space"
     ]
   }).notNull(),
   location: text("location").notNull(),
