@@ -33,7 +33,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function AuthPage() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const isAdminLogin = location.includes("mode=admin");
   const { user, login, register, isLoading: isUserLoading } = useUser();
   const { toast } = useToast();
   const { t } = useI18n();
@@ -58,16 +59,12 @@ export default function AuthPage() {
     },
   });
 
-  const onSubmit = async (data: FormData, isLogin: boolean) => {
+  const onSubmit = async (data: FormData) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      if (isLogin) {
-        await login(data);
-      } else {
-        await register(data);
-      }
+      await login(data);
     } catch (error: any) {
       console.error("Auth error:", error);
       toast({
@@ -80,14 +77,16 @@ export default function AuthPage() {
     }
   };
 
+  // Show loading state
   if (isUserLoading) return null;
+
+  // Redirect if already logged in
   if (user) return null;
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md space-y-4">
-        {/* Admin Login Card */}
-        <Card>
+  if (isAdminLogin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Lock className="h-5 w-5 text-primary" />
@@ -100,7 +99,7 @@ export default function AuthPage() {
           <CardContent>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit((data) => onSubmit(data, true))}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
                 <FormField
@@ -129,72 +128,13 @@ export default function AuthPage() {
                     </FormItem>
                   )}
                 />
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Loading..." : "Login to Admin Panel"}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-
-        {/* User Login/Register Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("auth.loginTitle")}</CardTitle>
-            <CardDescription>{t("auth.loginDescription")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit((data) => onSubmit(data, true))}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("common.username")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("common.password")}</FormLabel>
-                      <FormControl>
-                        <Input type="password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <div className="flex gap-2">
                   <Button
                     type="submit"
-                    className="flex-1"
+                    className="w-full"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? t("common.loading") : t("common.login")}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => form.handleSubmit((data) => onSubmit(data, false))()}
-                    disabled={isSubmitting}
-                  >
-                    {t("common.register")}
+                    {isSubmitting ? "Loading..." : "Login to Admin Panel"}
                   </Button>
                 </div>
               </form>
@@ -202,6 +142,70 @@ export default function AuthPage() {
           </CardContent>
         </Card>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>{t("auth.loginTitle")}</CardTitle>
+          <CardDescription>{t("auth.loginDescription")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("common.username")}</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("common.password")}</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? t("common.loading") : t("common.login")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => form.handleSubmit((data) => register(data).then(() => login(data)))()}
+                  disabled={isSubmitting}
+                >
+                  {t("common.register")}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
