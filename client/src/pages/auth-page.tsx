@@ -86,33 +86,35 @@ export default function AuthPage() {
     }
   };
 
-  // Show loading state while checking auth status
   if (isUserLoading) return null;
-
-  // If authenticated, don't render the auth page
   if (user) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle>{t("auth.loginTitle")}</CardTitle>
-              <CardDescription>
-                {t("auth.loginDescription")}
-              </CardDescription>
-            </div>
-            <Button 
-              variant="ghost" 
+        <CardHeader className="space-y-6">
+          <CardTitle>{t("auth.loginTitle")}</CardTitle>
+          <CardDescription>{t("auth.loginDescription")}</CardDescription>
+
+          {/* Admin/User Toggle */}
+          <div className="flex gap-2 justify-center pt-4">
+            <Button
+              variant={!isAdminLogin ? "default" : "outline"}
               size="sm"
-              className={isAdminLogin ? "text-primary" : "text-muted-foreground"}
-              onClick={() => setIsAdminLogin(!isAdminLogin)}
+              onClick={() => setIsAdminLogin(false)}
             >
-              {isAdminLogin ? "← Back to User Login" : "Admin Login →"}
+              User Login
+            </Button>
+            <Button
+              variant={isAdminLogin ? "default" : "outline"}
+              size="sm"
+              onClick={() => setIsAdminLogin(true)}
+            >
+              Admin Login
             </Button>
           </div>
         </CardHeader>
+
         <CardContent>
           <Tabs defaultValue="login">
             <TabsList className="grid w-full grid-cols-2">
@@ -137,7 +139,7 @@ export default function AuthPage() {
                       <FormItem>
                         <FormLabel>{t("common.username")}</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} placeholder={isAdminLogin ? "Admin username" : "Username"} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -150,7 +152,7 @@ export default function AuthPage() {
                       <FormItem>
                         <FormLabel>{t("common.password")}</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input type="password" {...field} placeholder={isAdminLogin ? "Admin password" : "Password"} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
