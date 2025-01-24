@@ -18,6 +18,29 @@ export const en = {
     loginSuccess: "Successfully logged in",
     logoutSuccess: "Successfully logged out",
   },
+  admin: {
+    navigation: {
+      title: "Admin Navigation",
+      dashboard: "Dashboard",
+      investments: "Investments",
+      files: "Files",
+      settings: "Settings",
+    },
+    investments: {
+      addNew: "Add Investment",
+      manage: "Manage Investments",
+      addDescription: "Create a new investment opportunity",
+      manageDescription: "Edit or update existing investments",
+    },
+    files: {
+      title: "File Manager",
+      description: "Manage uploaded files and documents",
+    },
+    settings: {
+      title: "Settings",
+      description: "Configure admin panel settings",
+    },
+  },
   landing: {
     hero: {
       title: "Invest in Premium Real Estate & Businesses",

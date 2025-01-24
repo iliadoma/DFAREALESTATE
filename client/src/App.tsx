@@ -10,6 +10,7 @@ import LandingPage from "@/pages/landing";
 import AuthPage from "@/pages/auth-page";
 import Dashboard from "@/pages/dashboard";
 import InvestmentDetail from "@/pages/investment-detail";
+import AdminDashboard from "@/pages/admin/dashboard";
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -35,7 +36,21 @@ function Router() {
     );
   }
 
-  // If user is authenticated, only show protected routes
+  // If user is an admin, show admin routes
+  if (user.role === "admin") {
+    return (
+      <Switch>
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/investments/:id" component={InvestmentDetail} />
+        <Route>
+          <AdminDashboard />
+        </Route>
+      </Switch>
+    );
+  }
+
+  // If user is authenticated but not admin, show protected routes
   return (
     <Switch>
       <Route path="/dashboard" component={Dashboard} />

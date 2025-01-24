@@ -150,4 +150,27 @@ export const ru = {
     profitMargin: "Маржа прибыли",
     customerCount: "Клиентов в месяц",
   },
+  admin: {
+    navigation: {
+      title: "Навигация администратора",
+      dashboard: "Панель управления",
+      investments: "Инвестиции",
+      files: "Файлы",
+      settings: "Настройки",
+    },
+    investments: {
+      addNew: "Добавить инвестицию",
+      manage: "Управление инвестициями",
+      addDescription: "Создать новую инвестиционную возможность",
+      manageDescription: "Редактировать или обновить существующие инвестиции",
+    },
+    files: {
+      title: "Файловый менеджер",
+      description: "Управление загруженными файлами и документами",
+    },
+    settings: {
+      title: "Настройки",
+      description: "Настройка панели администратора",
+    },
+  },
 };
